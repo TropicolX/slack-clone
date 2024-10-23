@@ -8,12 +8,9 @@
     --primary: #f8f8f8;
     --secondary: #e0e0e0cc;
     --icon-gray: #b1b1b2;
+    --channel-gray: #d1d2d3;
     --gray-0: 16, 18, 20;
     --gray-10: 33, 36, 40;
-  }
-
-  body {
-    /* @apply font-google-sans bg-white tracking-looser text-dark-gray; */
   }
 }
 

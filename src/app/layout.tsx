@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+
 import './globals.css';
-import Share from '../components/icons/Share';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,24 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-lato antialiased">
-        <div className="w-screen h-screen flex flex-col">
-          <div className="absolute w-full h-full bg-theme-gradient" />
-          {/* Toolbar */}
-          <div className="relative w-full h-10 flex items-center justify-between pr-1">
-            <div className="w-[4.375rem] h-10 mr-auto flex-none" />
-            <div className="flex flex-auto items-center">
-              <div className="relative flex flex-none basis-[24%]">
-                <Share />
-              </div>
-              <div className="flex"></div>
-              <div className="flex"></div>
-            </div>
-          </div>
-          {/* Main */}
-          <div className="">{children}</div>
-        </div>
-      </body>
+      <body className="font-lato text-white antialiased">{children}</body>
     </html>
   );
 }

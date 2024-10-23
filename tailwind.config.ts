@@ -13,7 +13,10 @@ const config: Config = {
           'radial-gradient(circle at 50% 50%, rgb(var(--gray-10)) 20%, transparent 80%), conic-gradient(from 45deg at 50% 50%, rgb(var(--gray-0)) 0%, rgb(var(--gray-10)) 25%, rgb(var(--gray-0)) 50%, rgb(var(--gray-10)) 75%, rgb(var(--gray-0)) 100%)',
       },
       colors: {
-        primary: 'var(--primary)',
+        white: 'var(--primary)',
+        'sidebar-gray': 'var(--secondary)',
+        'channel-gray': 'var(--channel-gray)',
+        'hover-gray': '#f8f8f814',
       },
       fontFamily: {
         lato: ['Lato', 'Arial', 'sans-serif'],
