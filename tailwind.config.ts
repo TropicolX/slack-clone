@@ -16,10 +16,13 @@ const config: Config = {
         white: 'var(--primary)',
         'sidebar-gray': 'var(--secondary)',
         'channel-gray': 'var(--channel-gray)',
+        'icon-gray': 'var(--icon-gray)',
         'hover-gray': '#f8f8f814',
+        purple: '#4a154b',
       },
       fontFamily: {
         lato: ['Lato', 'Arial', 'sans-serif'],
+        outfit: ['Outfit', 'Roboto', 'Arial', 'sans-serif'],
       },
     },
   },

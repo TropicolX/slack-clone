@@ -25,7 +25,7 @@ const SidebarButton = ({
       onClick={onClick}
       className={clsx(
         'pl-4 pr-2.5 h-7 leading-7 rounded-md cursor-pointer inline-flex items-center text-sidebar-gray disabled:bg-transparent [&_path]:disabled:fill-[#8a8b8d]',
-        active ? 'bg-[#f8f8f840]' : 'hover:bg-hover-gray',
+        active ? 'bg-[#414449]' : 'hover:bg-hover-gray',
         className
       )}
     >

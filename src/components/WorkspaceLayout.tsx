@@ -1,6 +1,8 @@
 'use client';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 
+import { AppContext } from '../app/client/layout';
 import Sidebar from './Sidebar';
 
 interface WorkspaceLayoutProps {
@@ -8,6 +10,7 @@ interface WorkspaceLayoutProps {
 }
 
 const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
+  const { loading } = useContext(AppContext);
   const layoutRef = useRef<HTMLDivElement>(null);
   const [layoutWidth, setLayoutWidth] = useState(0);
 
@@ -15,13 +18,27 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
     if (!layoutRef.current) {
       return;
     }
-    setLayoutWidth(layoutRef.current.clientWidth);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setLayoutWidth(entry.contentRect.width);
+      }
+    });
+
+    resizeObserver.observe(layoutRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, [layoutRef]);
 
   return (
     <div
       ref={layoutRef}
-      className="relative flex mr-1 mb-1 rounded-md overflow-hidden border border-solid border-[#797c814d]"
+      className={clsx(
+        'relative flex mr-1 mb-1 rounded-md overflow-hidden border border-solid',
+        loading ? 'border-transparent' : 'border-[#797c814d]'
+      )}
     >
       {/* Sidebar */}
       <Sidebar layoutWidth={layoutWidth} />

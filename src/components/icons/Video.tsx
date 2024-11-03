@@ -5,7 +5,7 @@ interface VideoProps {
   size?: number;
 }
 
-const Video = ({ color, size = 20 }: VideoProps) => {
+const Video = ({ color, size = 18 }: VideoProps) => {
   return (
     <svg
       data-5iu="true"

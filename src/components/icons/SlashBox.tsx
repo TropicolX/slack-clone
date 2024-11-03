@@ -5,7 +5,7 @@ interface SlashBoxProps {
   size?: number;
 }
 
-const SlashBox = ({ color, size = 20 }: SlashBoxProps) => {
+const SlashBox = ({ color, size = 18 }: SlashBoxProps) => {
   return (
     <svg
       data-5iu="true"

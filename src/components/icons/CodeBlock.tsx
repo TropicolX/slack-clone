@@ -5,7 +5,7 @@ interface CodeBlockProps {
   size?: number;
 }
 
-const CodeBlock = ({ color, size = 20 }: CodeBlockProps) => {
+const CodeBlock = ({ color, size = 18 }: CodeBlockProps) => {
   return (
     <svg
       data-5iu="true"

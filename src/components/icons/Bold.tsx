@@ -5,7 +5,7 @@ interface BoldProps {
   size?: number;
 }
 
-const Bold = ({ color, size = 20 }: BoldProps) => {
+const Bold = ({ color, size = 18 }: BoldProps) => {
   return (
     <svg
       data-5iu="true"

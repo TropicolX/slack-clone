@@ -5,7 +5,7 @@ interface LinkProps {
   size?: number;
 }
 
-const Link = ({ color, size = 20 }: LinkProps) => {
+const Link = ({ color, size = 18 }: LinkProps) => {
   return (
     <svg
       data-5iu="true"

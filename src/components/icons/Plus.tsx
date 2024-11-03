@@ -1,12 +1,13 @@
 import React from 'react';
 
 interface PlusProps {
-  color: string;
+  className?: string;
+  color?: string;
   filled?: boolean;
   size?: number;
 }
 
-const Plus = ({ color, filled = false, size = 20 }: PlusProps) => {
+const Plus = ({ className, color, filled = false, size = 20 }: PlusProps) => {
   if (filled)
     return (
       <svg
@@ -19,6 +20,7 @@ const Plus = ({ color, filled = false, size = 20 }: PlusProps) => {
       >
         <path
           fill={color}
+          className={className}
           fillRule="evenodd"
           d="M11 3.5a1 1 0 1 0-2 0V9H3.5a1 1 0 0 0 0 2H9v5.5a1 1 0 1 0 2 0V11h5.5a1 1 0 1 0 0-2H11z"
           clipRule="evenodd"
@@ -37,6 +39,7 @@ const Plus = ({ color, filled = false, size = 20 }: PlusProps) => {
     >
       <path
         fill={color}
+        className={className}
         fillRule="evenodd"
         d="M10.75 3.25a.75.75 0 0 0-1.5 0v6H3.251L3.25 10v-.75a.75.75 0 0 0 0 1.5V10v.75h6v6a.75.75 0 0 0 1.5 0v-6h6a.75.75 0 0 0 0-1.5h-6z"
         clipRule="evenodd"

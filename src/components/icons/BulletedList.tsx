@@ -5,7 +5,7 @@ interface BulletedListProps {
   size?: number;
 }
 
-const BulletedList = ({ color, size = 20 }: BulletedListProps) => {
+const BulletedList = ({ color, size = 18 }: BulletedListProps) => {
   return (
     <svg
       data-5iu="true"

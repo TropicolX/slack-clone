@@ -5,6 +5,12 @@ const nextConfig = {
       {
         hostname: 'avatars.slack-edge.com',
       },
+      {
+        hostname: 'a.slack-edge.com',
+      },
+      {
+        hostname: 'picsum.photos',
+      },
     ],
   },
 };

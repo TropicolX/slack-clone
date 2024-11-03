@@ -3,7 +3,11 @@ import { useState } from 'react';
 
 import Search from './icons/Search';
 
-const SearchBar = () => {
+interface SearchBarProps {
+  placeholder: string;
+}
+
+const SearchBar = ({ placeholder }: SearchBarProps) => {
   const [search, setSearch] = useState('');
 
   return (
@@ -14,9 +18,9 @@ const SearchBar = () => {
         name="search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search Write the Docs"
+        placeholder={placeholder}
         autoComplete="off"
-        className="h-full pb-[2.2px] bg-transparent px-2 outline-none text-white placeholder:text-white placeholder:text-[13px] placeholder:leading-[1.38463] disabled:cursor-default"
+        className="h-full pb-[2.2px] bg-transparent px-2 outline-none text-white text-[13px] -mb-1 placeholder:text-white placeholder:text-[13px] placeholder:leading-[1.38463] disabled:cursor-default"
         maxLength={60}
       />
     </div>

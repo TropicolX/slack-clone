@@ -5,7 +5,7 @@ interface NumberedListProps {
   size?: number;
 }
 
-const NumberedList = ({ color, size = 20 }: NumberedListProps) => {
+const NumberedList = ({ color, size = 18 }: NumberedListProps) => {
   return (
     <svg
       data-5iu="true"

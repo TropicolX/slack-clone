@@ -5,7 +5,7 @@ interface StrikethroughProps {
   size?: number;
 }
 
-const Strikethrough = ({ color, size = 20 }: StrikethroughProps) => {
+const Strikethrough = ({ color, size = 18 }: StrikethroughProps) => {
   return (
     <svg
       data-5iu="true"

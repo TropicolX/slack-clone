@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,6 +11,71 @@
     --channel-gray: #d1d2d3;
     --gray-0: 16, 18, 20;
     --gray-10: 33, 36, 40;
+  }
+
+  .client ::selection {
+    background: #7d7e81;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    border: none;
+    -webkit-text-fill-color: var(--primary);
+    -webkit-box-shadow: 0 0 0px 1000px #1a1d21 inset;
+    caret-color: var(--primary);
+  }
+
+  .client ul>li:before,
+  .client ol>li:before {
+    color: var(--channel-gray);
+    display: inline-block;
+    width: 24px;
+    margin-left: -24px;
+    vertical-align: baseline;
+    text-align: center;
+    content: '•';
+  }
+
+  .client ul>li:before {
+    height: 15px;
+    font-size: 17px;
+    line-height: 17px;
+  }
+
+  .client ol {
+    counter-reset: list-0;
+  }
+
+  .client ol>li:before {
+    counter-increment: list-0;
+    content: counter(list-0, decimal) '. ';
+  }
+
+  .client ol>li,
+  .client ul>li {
+    margin-left: 24px;
+  }
+
+  .client ol>li>*,
+  .client ul>li>* {
+    margin-left: 3px;
+    line-height: 22px;
+  }
+
+  .client code {
+    color: #e8912d;
+    background: #2c2e33;
+    border: 1px solid #4a4d55;
+    font-variant-ligatures: none;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    tab-size: 4;
+    border-radius: 3px;
+    padding: 2px 3px 1px;
+    font-size: 12px;
+    line-height: 1.50001;
   }
 }
 

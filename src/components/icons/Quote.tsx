@@ -5,7 +5,7 @@ interface QuoteProps {
   size?: number;
 }
 
-const Quote = ({ color, size = 20 }: QuoteProps) => {
+const Quote = ({ color, size = 18 }: QuoteProps) => {
   return (
     <svg
       data-5iu="true"

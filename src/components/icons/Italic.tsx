@@ -5,7 +5,7 @@ interface ItalicProps {
   size?: number;
 }
 
-const Italic = ({ color, size = 20 }: ItalicProps) => {
+const Italic = ({ color, size = 18 }: ItalicProps) => {
   return (
     <svg
       data-5iu="true"

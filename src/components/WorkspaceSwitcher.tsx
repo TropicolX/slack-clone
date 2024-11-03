@@ -1,19 +1,19 @@
-import Image from 'next/image';
-import React from 'react';
+import { useContext } from 'react';
 
-// interface WorkspaceSwitcherProps {
-
-// }
+import { AppContext } from '../app/client/layout';
+import Avatar from './Avatar';
 
 const WorkspaceSwitcher = () => {
+  const { workspace } = useContext(AppContext);
+
   return (
     <div className="w-9 h-9 mb-[5px] cursor-pointer">
-      <Image
+      <Avatar
         width={36}
-        height={36}
-        src="https://avatars.slack-edge.com/2015-01-12/3390085545_12cd7ec3fb90fd0f5e5d_88.jpg"
-        alt="Worspace image"
-        className="rounded-lg"
+        borderRadius={8}
+        fontSize={20}
+        fontWeight={700}
+        data={{ name: workspace.name, image: workspace.image }}
       />
     </div>
   );
