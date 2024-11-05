@@ -1,7 +1,9 @@
 'use client';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Channel as PrismaChannel } from '@prisma/client';
-import { Channel as StreamChannel, StreamChat } from 'stream-chat';
+import { useUser } from '@clerk/nextjs';
+import { Channel as StreamChannel } from 'stream-chat';
+import { DefaultStreamChatGenerics } from 'stream-chat-react';
 import clsx from 'clsx';
 
 import { AppContext } from '../../layout';
@@ -12,8 +14,6 @@ import Message from '@/components/icons/Message';
 import MoreVert from '@/components/icons/MoreVert';
 import Pin from '@/components/icons/Pin';
 import Plus from '@/components/icons/Plus';
-import { DefaultStreamChatGenerics } from 'stream-chat-react';
-import { useUser } from '@clerk/nextjs';
 
 interface ChannelProps {
   params: {
@@ -22,26 +22,18 @@ interface ChannelProps {
   };
 }
 
-const tokenProvider = async (userId: string) => {
-  const response = await fetch('/api/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ userId: userId }),
-  });
-  const data = await response.json();
-  return data.token;
-};
-
 const Channel = ({ params }: ChannelProps) => {
   const { workspaceId, channelId } = params;
   const { user } = useUser();
-  const { loading, setLoading, workspace, setWorkspace } =
-    useContext(AppContext);
+  const {
+    chatClient,
+    loading,
+    setLoading,
+    workspace,
+    setWorkspace,
+    setOtherWorkspaces,
+  } = useContext(AppContext);
   const [channel, setChannel] = useState<PrismaChannel>();
-  const [chatClient, setChatClient] =
-    useState<StreamChat<DefaultStreamChatGenerics>>();
   const [chatChannel, setChatChannel] =
     useState<StreamChannel<DefaultStreamChatGenerics>>();
   const [channelLoading, setChannelLoading] = useState(true);
@@ -61,20 +53,16 @@ const Channel = ({ params }: ChannelProps) => {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [layoutRef.current, loading]);
+  }, [layoutRef, loading]);
 
   useEffect(() => {
-    const customProvider = async () => {
-      const token = await tokenProvider(user!.id);
-      return token;
-    };
-
     const loadWorkspace = async () => {
       try {
         const response = await fetch(`/api/workspaces/${workspaceId}`);
         const result = await response.json();
         if (response.ok) {
-          setWorkspace(result);
+          setWorkspace(result.workspace);
+          setOtherWorkspaces(result.otherWorkspaces);
           localStorage.setItem(
             'activitySession',
             JSON.stringify({ workspaceId, channelId })
@@ -89,22 +77,7 @@ const Channel = ({ params }: ChannelProps) => {
       }
     };
 
-    const loadChannel = async () => {
-      const chatClient = StreamChat.getInstance(
-        process.env.NEXT_PUBLIC_STREAM_API_KEY as string
-      );
-      const clerkUser = user!;
-      const chatUser = {
-        id: clerkUser.id,
-        name: clerkUser.fullName!,
-        image: clerkUser.imageUrl,
-        custom: {
-          username: user?.username,
-        },
-      };
-      await chatClient.connectUser(chatUser, customProvider);
-      setChatClient(chatClient);
-
+    const loadChannel = () => {
       const channel = chatClient.channel('messaging', channelId);
       setChatChannel(channel);
       setChannelLoading(false);
@@ -114,25 +87,25 @@ const Channel = ({ params }: ChannelProps) => {
       if (!workspace) {
         await loadWorkspace();
       } else {
-        setChannel(workspace.channels.find((c) => c.id === channelId));
-        setLoading(false);
-        await loadChannel();
+        if (!channel)
+          setChannel(workspace.channels.find((c) => c.id === channelId));
+        if (loading) setLoading(false);
+        if (chatClient) loadChannel();
       }
     };
 
     if (!chatChannel && user) loadWorkspaceAndChannel();
-
-    return () => {
-      chatClient?.disconnectUser();
-      setChatClient(undefined);
-    };
   }, [
+    channel,
+    loading,
     chatChannel,
+    chatClient,
     workspace,
     workspaceId,
     channelId,
     setLoading,
     setWorkspace,
+    setOtherWorkspaces,
     user,
   ]);
 

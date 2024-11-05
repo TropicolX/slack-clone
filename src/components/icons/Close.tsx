@@ -1,11 +1,12 @@
 import React from 'react';
 
 interface CloseProps {
-  color: string;
+  color?: string;
   size?: number;
+  className?: string;
 }
 
-const Close = ({ color, size = 20 }: CloseProps) => {
+const Close = ({ className, color, size = 20 }: CloseProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,6 +14,7 @@ const Close = ({ color, size = 20 }: CloseProps) => {
       width={size}
       height={size}
       fill={color}
+      className={className}
     >
       <path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z" />
     </svg>

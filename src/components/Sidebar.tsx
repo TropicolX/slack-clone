@@ -1,7 +1,8 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { useUser } from '@clerk/nextjs';
 
 import { AppContext } from '../app/client/layout';
 import ArrowDropdown from './icons/ArrowDropdown';
@@ -13,6 +14,8 @@ import Refine from './icons/Refine';
 import Send from './icons/Send';
 import SidebarButton from './SidebarButton';
 import Threads from './icons/Threads';
+import Plus from './icons/Plus';
+import AddChannelModal from './AddChannelModal';
 
 const [minWidth, defaultWidth] = [180, 275];
 
@@ -22,6 +25,8 @@ type SidebarProps = {
 
 const Sidebar = ({ layoutWidth }: SidebarProps) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const { user } = useUser();
   const { loading, workspace } = useContext(AppContext);
 
   const [width, setWidth] = useState<number>(() => {
@@ -32,6 +37,8 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
     return savedWidth;
   });
   const maxWidth = useMemo(() => layoutWidth - 374, [layoutWidth]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isDragged = useRef(false);
 
@@ -95,9 +102,16 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
   };
 
   const channelActive = (channelId: string) => {
-    const currentPath = window.location.pathname;
-    const pathChannelId = currentPath.split('/').filter(Boolean).pop();
+    const pathChannelId = pathname.split('/').filter(Boolean).pop();
     return pathChannelId === channelId;
+  };
+
+  const openCreateChannelModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const onModalClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -154,6 +168,13 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
                 active={channelActive(channel.id)}
               />
             ))}
+            {workspace.ownerId === user!.id && (
+              <SidebarButton
+                icon={Plus}
+                title="Add a channel"
+                onClick={openCreateChannelModal}
+              />
+            )}
           </div>
           {/* Handle */}
           <div
@@ -162,6 +183,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
               isDragged.current = true;
             }}
           />
+          <AddChannelModal open={isModalOpen} onClose={onModalClose} />
         </>
       )}
     </div>

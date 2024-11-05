@@ -2,17 +2,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import TextField from '@/components/TextField';
-import RailButton from '@/components/RailButton';
+import { isUrl } from '@/lib/utils';
+import ArrowDropdown from '@/components/icons/ArrowDropdown';
+import Avatar from '@/components/Avatar';
+import Button from '@/components/Button';
+import Hash from '@/components/icons/Hash';
 import Home from '@/components/icons/Home';
 import MoreHoriz from '@/components/icons/MoreHoriz';
-import ArrowDropdown from '@/components/icons/ArrowDropdown';
+import RailButton from '@/components/RailButton';
 import SidebarButton from '@/components/SidebarButton';
-import Hash from '@/components/icons/Hash';
 import Tags from '@/components/Tags';
-import Button from '@/components/Button';
-import { isUrl } from '@/lib/utils';
-import Avatar from '../../components/Avatar';
+import TextField from '@/components/TextField';
 
 const pattern = `(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))`;
 
@@ -41,8 +41,8 @@ const GetStarted = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            workspaceName,
-            channelName,
+            workspaceName: workspaceName.trim(),
+            channelName: channelName.trim(),
             emails,
             imageUrl,
           }),

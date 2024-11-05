@@ -12,7 +12,8 @@ interface WorkspacePageProps {
 
 export default function WorkspacePage({ params }: WorkspacePageProps) {
   const { workspaceId } = params;
-  const { workspace, setWorkspace, setLoading } = useContext(AppContext);
+  const { workspace, setWorkspace, setOtherWorkspaces } =
+    useContext(AppContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
       const channelId = workspace.channels[0].id;
       localStorage.setItem(
         'activitySession',
-        JSON.stringify({ workspaceId, channelId })
+        JSON.stringify({ workspaceId: workspace.id, channelId })
       );
       router.push(`/client/${workspace.id}/${channelId}`);
     };
@@ -30,8 +31,9 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
         const response = await fetch(`/api/workspaces/${workspaceId}`);
         const result = await response.json();
         if (response.ok) {
-          setWorkspace(result);
-          goToChannel(result);
+          setWorkspace(result.workspace);
+          setOtherWorkspaces(result.otherWorkspaces);
+          goToChannel(result.workspace);
         } else {
           console.error('Error fetching workspace data:', result.error);
         }
@@ -45,7 +47,7 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
     } else {
       goToChannel(workspace);
     }
-  }, []);
+  }, [workspace, workspaceId, setWorkspace, setOtherWorkspaces, router]);
 
   return null;
 }

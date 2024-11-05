@@ -13,7 +13,7 @@ export default function Client() {
     } else {
       router.push('/');
     }
-  }, []);
+  }, [router]);
 
   return null;
 }

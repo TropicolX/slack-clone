@@ -1,11 +1,13 @@
 'use client';
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import {
   Channel,
   Invitation,
   Membership,
   Workspace as PrismaWorkspace,
 } from '@prisma/client';
+import { useUser } from '@clerk/nextjs';
+import { StreamChat } from 'stream-chat';
 
 import ArrowBack from '@/components/icons/ArrowBack';
 import ArrowForward from '@/components/icons/ArrowForward';
@@ -21,6 +23,7 @@ import Bookmark from '@/components/icons/Bookmark';
 import MoreHoriz from '@/components/icons/MoreHoriz';
 import SearchBar from '@/components/SearchBar';
 import WorkspaceLayout from '@/components/WorkspaceLayout';
+import { Chat } from 'stream-chat-react';
 
 interface LayoutProps {
   children?: ReactNode;
@@ -36,93 +39,164 @@ export type Workspace = PrismaWorkspace & {
 export const AppContext = createContext<{
   workspace: Workspace;
   setWorkspace: (workspace: Workspace) => void;
+  otherWorkspaces: Workspace[];
+  setOtherWorkspaces: (workspaces: Workspace[]) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
+  chatClient: StreamChat;
+  setChatClient: (chatClient: StreamChat) => void;
 }>({
   workspace: {} as Workspace,
   setWorkspace: () => {},
+  otherWorkspaces: [],
+  setOtherWorkspaces: () => {},
   loading: false,
   setLoading: () => {},
+  chatClient: {} as StreamChat,
+  setChatClient: () => {},
 });
 
+const tokenProvider = async (userId: string) => {
+  const response = await fetch('/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ userId: userId }),
+  });
+  const data = await response.json();
+  return data.token;
+};
+
 const Layout = ({ children }: LayoutProps) => {
+  const { user } = useUser();
   const [loading, setLoading] = useState(true);
   const [workspace, setWorkspace] = useState<Workspace>();
+  const [otherWorkspaces, setOtherWorkspaces] = useState<Workspace[]>([]);
+  const [chatClient, setChatClient] = useState<StreamChat>();
+
+  useEffect(() => {
+    const customProvider = async () => {
+      const token = await tokenProvider(user!.id);
+      return token;
+    };
+
+    const setUpChatClient = async () => {
+      const chatClient = StreamChat.getInstance(
+        process.env.NEXT_PUBLIC_STREAM_API_KEY as string
+      );
+      const clerkUser = user!;
+      const chatUser = {
+        id: clerkUser.id,
+        name: clerkUser.fullName!,
+        image: clerkUser.imageUrl,
+        custom: {
+          username: user?.username,
+        },
+      };
+      if (!chatClient._hasConnectionID()) {
+        await chatClient.connectUser(chatUser, customProvider);
+      }
+
+      setChatClient(chatClient);
+    };
+    if (user) setUpChatClient();
+
+    return () => {
+      chatClient?.disconnectUser();
+    };
+  }, [user, chatClient]);
+
+  if (!chatClient)
+    return (
+      <div className="client font-lato w-screen h-screen flex flex-col">
+        <div className="absolute w-full h-full bg-theme-gradient" />
+      </div>
+    );
 
   return (
     <AppContext.Provider
       value={{
         workspace: workspace!,
         setWorkspace,
+        otherWorkspaces,
+        setOtherWorkspaces,
         loading,
         setLoading,
+        chatClient: chatClient!,
+        setChatClient,
       }}
     >
-      <div className="client font-lato w-screen h-screen flex flex-col">
-        <div className="absolute w-full h-full bg-theme-gradient" />
-        {/* Toolbar */}
-        <div className="relative w-full h-10 flex items-center justify-between pr-1">
-          <div className="w-[4.375rem] h-10 mr-auto flex-none" />
-          {!loading && (
-            <div className="flex flex-auto items-center">
-              <div className="relative flex flex-none basis-[24%]">
-                <div className="flex justify-start basis-full" />
-                <div className="flex justify-end basis-full mr-3">
-                  <div className="flex gap-1 items-center">
-                    <IconButton icon={<ArrowBack color="var(--primary)" />} />
-                    <IconButton
-                      icon={<ArrowForward color="var(--primary)" />}
-                      disabled
-                    />
-                  </div>
-                  <div className="flex items-center ml-1">
-                    <IconButton icon={<Clock color="var(--primary)" />} />
-                  </div>
-                </div>
-              </div>
-              <SearchBar placeholder={`Search ${workspace?.name}`} />
-              <div className="flex flex-[1_0_auto] items-center justify-end mr-1">
-                <IconButton icon={<Help color="var(--primary)" />} />
-              </div>
-            </div>
-          )}
-        </div>
-        {/* Main */}
-        <div className="w-screen h-[calc(100vh-40px)] grid grid-cols-[70px_auto]">
-          {/* Rail */}
-          <div className="relative w-[4.375rem] flex flex-col items-center overflow-hidden gap-3 pt-2 z-[1000] bg-transparent">
+      <Chat client={chatClient!}>
+        <div className="client font-lato w-screen h-screen flex flex-col">
+          <div className="absolute w-full h-full bg-theme-gradient" />
+          {/* Toolbar */}
+          <div className="relative w-full h-10 flex items-center justify-between pr-1">
+            <div className="w-[4.375rem] h-10 mr-auto flex-none" />
             {!loading && (
-              <>
-                <WorkspaceSwitcher />
-                <div className="relative flex flex-col items-center w-[3.25rem]">
-                  <RailButton
-                    title="Home"
-                    icon={<Home color="var(--primary)" filled />}
-                    active
-                  />
-                  <RailButton
-                    title="DMs"
-                    icon={<Messages color="var(--primary)" />}
-                  />
-                  <RailButton
-                    title="Activity"
-                    icon={<Notifications color="var(--primary)" />}
-                  />
-                  <RailButton
-                    title="Later"
-                    icon={<Bookmark color="var(--primary)" />}
-                  />
-                  <RailButton
-                    title="More"
-                    icon={<MoreHoriz color="var(--primary)" />}
-                  />
+              <div className="flex flex-auto items-center">
+                <div className="relative flex flex-none basis-[24%]">
+                  <div className="flex justify-start basis-full" />
+                  <div className="flex justify-end basis-full mr-3">
+                    <div className="flex gap-1 items-center">
+                      <IconButton
+                        icon={<ArrowBack color="var(--primary)" />}
+                        disabled
+                      />
+                      <IconButton
+                        icon={<ArrowForward color="var(--primary)" />}
+                        disabled
+                      />
+                    </div>
+                    <div className="flex items-center ml-1">
+                      <IconButton icon={<Clock color="var(--primary)" />} />
+                    </div>
+                  </div>
                 </div>
-              </>
+                <SearchBar placeholder={`Search ${workspace?.name}`} />
+                <div className="flex flex-[1_0_auto] items-center justify-end mr-1">
+                  <IconButton icon={<Help color="var(--primary)" />} />
+                </div>
+              </div>
             )}
           </div>
-          <WorkspaceLayout>{children}</WorkspaceLayout>
+          {/* Main */}
+          <div className="w-screen h-[calc(100vh-40px)] grid grid-cols-[70px_auto]">
+            {/* Rail */}
+            <div className="relative w-[4.375rem] flex flex-col items-center overflow-hidden gap-3 pt-2 z-[1000] bg-transparent">
+              {!loading && (
+                <>
+                  <WorkspaceSwitcher />
+                  <div className="relative flex flex-col items-center w-[3.25rem]">
+                    <RailButton
+                      title="Home"
+                      icon={<Home color="var(--primary)" filled />}
+                      active
+                    />
+                    <RailButton
+                      title="DMs"
+                      icon={<Messages color="var(--primary)" />}
+                    />
+                    <RailButton
+                      title="Activity"
+                      icon={<Notifications color="var(--primary)" />}
+                    />
+                    <RailButton
+                      title="Later"
+                      icon={<Bookmark color="var(--primary)" />}
+                    />
+                    <RailButton
+                      title="More"
+                      icon={<MoreHoriz color="var(--primary)" />}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            <WorkspaceLayout>{children}</WorkspaceLayout>
+          </div>
         </div>
-      </div>
+      </Chat>
     </AppContext.Provider>
   );
 };
