@@ -5,23 +5,17 @@ import { SignOutButton } from '@clerk/nextjs';
 
 import Button from '@/components/Button';
 import Navbar from '@/components/Navbar';
-import prisma from '@/lib/prisma';
 import WorkspaceList from '@/components/WorkspaceList';
+import prisma from '@/lib/prisma';
 
 export default async function Home() {
   // THINGS LEFT TO DO
   // Add workspace creation page (ui + functionality) ✅
-  // Add channel creation ⏳
-  // Add chat ui + functionality (Stream Chat) ⏳
-  // Add thread creation? ⏳
+  // Add channel creation ✅
+  // Add workspace switcher popup ✅
+  // Add user settings popup? ✅
   // Add huddle creation ui + functionality (Stream Video) ⏳
-  // Add workspace switcher popup ⏳
-  // Add user settings popup? ⏳
-
-  // does the workspace exist?
-  // if not, redirect to home page
-  // if yes, load the first channel of the workspace and
-  // redirect to the chat page
+  // Add chat ui + functionality (Stream Chat) ⏳
 
   const user = await currentUser();
   const userEmail = user?.primaryEmailAddress?.emailAddress;
@@ -146,7 +140,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="font-lato min-h-screen bg-purple text-white">
+    <div className="font-lato min-h-screen text-white">
       <Navbar action={goToGetStartedPage} />
       <section className="mt-9 max-w-[62.875rem] mx-auto px-[4vw]">
         {/* Workspaces */}

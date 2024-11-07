@@ -59,42 +59,24 @@ export async function GET(
       );
     }
 
-    // Fetch the other workspaces the user is a member of
-    const memberships = await prisma.membership.findMany({
+    // Fetch the other workspaces the user is a member of excluding the current workspace
+    const otherWorkspaces = await prisma.workspace.findMany({
       where: {
-        userId,
-      },
-      include: {
-        workspace: {
-          include: {
-            _count: {
-              select: { memberships: true },
-            },
-            memberships: {
-              take: 5,
-            },
-            channels: {
-              take: 1,
-              select: {
-                id: true,
-              },
-            },
+        memberships: {
+          some: {
+            userId,
+            workspaceId: { not: workspaceId },
           },
         },
       },
+      include: {
+        channels: true,
+        memberships: true,
+        invitations: {
+          where: { acceptedAt: null },
+        },
+      },
     });
-
-    const otherWorkspaces = memberships
-      .map((membership) => {
-        const { workspace } = membership;
-        return {
-          id: workspace.id,
-          name: workspace.name,
-          image: workspace.image,
-          firstChannelId: workspace.channels[0].id,
-        };
-      })
-      .filter((w) => w.id !== workspaceId);
 
     return NextResponse.json({ workspace, otherWorkspaces }, { status: 200 });
   } catch (error) {

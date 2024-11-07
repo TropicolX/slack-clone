@@ -50,7 +50,7 @@ const AddChannelModal = ({ open, onClose }: AddChannelModalProps) => {
             channels: [...workspace.channels, { ...channel }],
           });
           setLoading(false);
-          onClose();
+          closeModal();
           router.push(`/client/${workspace.id}/${channel.id}`);
         } else {
           alert(`Error: ${result.error}`);
@@ -64,12 +64,18 @@ const AddChannelModal = ({ open, onClose }: AddChannelModalProps) => {
     }
   };
 
+  const closeModal = () => {
+    setChannelName('');
+    setChannelDescription('');
+    onClose();
+  };
+
   if (!open) return null;
 
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={closeModal}
       loading={loading}
       title="Create a channel"
     >
@@ -113,7 +119,7 @@ const AddChannelModal = ({ open, onClose }: AddChannelModalProps) => {
             {loading ? <Spinner /> : 'Save'}
           </button>
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="min-w-[80px] h-[36px] px-3 pb-[1px] text-[15px] border border-[#797c8180] font-bold select-none text-white rounded-lg"
             disabled={loading}
           >

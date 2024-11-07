@@ -6,8 +6,9 @@ import {
   Membership,
   Workspace as PrismaWorkspace,
 } from '@prisma/client';
-import { useUser } from '@clerk/nextjs';
+import { UserButton, useUser } from '@clerk/nextjs';
 import { StreamChat } from 'stream-chat';
+import { Chat } from 'stream-chat-react';
 
 import ArrowBack from '@/components/icons/ArrowBack';
 import ArrowForward from '@/components/icons/ArrowForward';
@@ -23,7 +24,11 @@ import Bookmark from '@/components/icons/Bookmark';
 import MoreHoriz from '@/components/icons/MoreHoriz';
 import SearchBar from '@/components/SearchBar';
 import WorkspaceLayout from '@/components/WorkspaceLayout';
-import { Chat } from 'stream-chat-react';
+
+import 'stream-chat-react/dist/css/v2/index.css';
+import '@stream-io/video-react-sdk/dist/css/styles.css';
+import Avatar from '../../components/Avatar';
+import Plus from '../../components/icons/Plus';
 
 interface LayoutProps {
   children?: ReactNode;
@@ -94,7 +99,8 @@ const Layout = ({ children }: LayoutProps) => {
           username: user?.username,
         },
       };
-      if (!chatClient._hasConnectionID()) {
+
+      if (!chatClient.user) {
         await chatClient.connectUser(chatUser, customProvider);
       }
 
@@ -107,7 +113,7 @@ const Layout = ({ children }: LayoutProps) => {
     };
   }, [user, chatClient]);
 
-  if (!chatClient)
+  if (!chatClient || !user)
     return (
       <div className="client font-lato w-screen h-screen flex flex-col">
         <div className="absolute w-full h-full bg-theme-gradient" />
@@ -163,7 +169,7 @@ const Layout = ({ children }: LayoutProps) => {
           {/* Main */}
           <div className="w-screen h-[calc(100vh-40px)] grid grid-cols-[70px_auto]">
             {/* Rail */}
-            <div className="relative w-[4.375rem] flex flex-col items-center overflow-hidden gap-3 pt-2 z-[1000] bg-transparent">
+            <div className="relative w-[4.375rem] flex flex-col items-center gap-3 pt-2 z-[1000] bg-transparent">
               {!loading && (
                 <>
                   <WorkspaceSwitcher />
@@ -189,6 +195,31 @@ const Layout = ({ children }: LayoutProps) => {
                       title="More"
                       icon={<MoreHoriz color="var(--primary)" />}
                     />
+                  </div>
+                  <div className="flex flex-col items-center gap-4 mt-auto pb-6 w-full">
+                    <div className="cursor-pointer flex items-center justify-center w-9 h-9 rounded-full bg-[#565759]">
+                      <Plus color="var(--primary)" />
+                    </div>
+                    <div className="relative h-9 w-9">
+                      <UserButton />
+                      <div className="absolute left-0 top-0 flex items-center justify-center pointer-events-none">
+                        <div className="relative w-full h-full">
+                          <Avatar
+                            width={36}
+                            borderRadius={8}
+                            fontSize={20}
+                            fontWeight={700}
+                            data={{
+                              name: user.fullName!,
+                              image: user.imageUrl,
+                            }}
+                          />
+                          <span className="absolute w-3.5 h-3.5 rounded-full flex items-center justify-center -bottom-[3px] -right-[3px] bg-[#111215]">
+                            <div className="w-[8.5px] h-[8.5px] rounded-full bg-[#3daa7c]" />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </>
               )}

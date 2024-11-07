@@ -23,7 +23,7 @@ const Avatar = ({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         style={{ width, height: width, borderRadius }}
-        className="overflow-hidden"
+        className="overflow-hidden object-cover"
         src={image}
         alt={name}
       />

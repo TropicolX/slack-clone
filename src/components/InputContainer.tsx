@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useContext, useMemo } from 'react';
 import clsx from 'clsx';
 import isHotkey from 'is-hotkey';
 import {
@@ -7,8 +7,13 @@ import {
   createEditor,
   Descendant as SlateDescendant,
   Element as SlateElement,
+  Text,
 } from 'slate';
 import { withHistory } from 'slate-history';
+import {
+  useChannelActionContext,
+  useChannelStateContext,
+} from 'stream-chat-react';
 import {
   Editable,
   withReact,
@@ -18,6 +23,7 @@ import {
   RenderElementProps,
 } from 'slate-react';
 
+import { AppContext } from '../app/client/layout';
 import Bold from './icons/Bold';
 import BulletedList from './icons/BulletedList';
 import Code from './icons/Code';
@@ -46,7 +52,26 @@ const HOTKEYS: {
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
+const initialValue: Descendant[] = [
+  {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  },
+];
+
 const InputContainer = () => {
+  // Links
+  // Codeblocks
+  // Quotes
+  // Mentions
+  // Images
+  // Files
+  // Emojis
+  // Send button
+
+  const { workspace } = useContext(AppContext);
+  const { channel } = useChannelStateContext();
+  const { sendMessage } = useChannelActionContext();
   const renderElement = useCallback(
     (props: ElementProps) => <Element {...props} />,
     []
@@ -56,10 +81,81 @@ const InputContainer = () => {
     []
   );
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const channelName = useMemo(() => {
+    const currentChannel = workspace.channels.find((c) => c.id === channel.id);
+    return currentChannel?.name || '';
+  }, [workspace.channels, channel.id]);
+
+  const serializeToMarkdown = (nodes: Descendant[]) => {
+    return nodes.map((n) => serializeNode(n)).join('\n');
+  };
+
+  const serializeNode = (
+    node: Descendant | Descendant['children'],
+    parentType: string | null = null,
+    indentation: string = ''
+  ) => {
+    if (Text.isText(node)) {
+      let text = node.text;
+
+      const formattedNode = node as Text & {
+        bold?: boolean;
+        italic?: boolean;
+        code?: boolean;
+        strikethrough?: boolean;
+      };
+
+      if (formattedNode.bold) text = `**${text}**`;
+      if (formattedNode.italic) text = `*${text}*`;
+      if (formattedNode.strikethrough) text = `~~${text}~~`;
+      if (formattedNode.code) text = `\`${text}\``;
+
+      return text;
+    }
+
+    const formattedNode = node as Descendant;
+    const children: string = formattedNode.children
+      .map((n) => serializeNode(n as never, formattedNode.type, indentation))
+      .join('');
+
+    switch (formattedNode.type) {
+      case 'paragraph':
+        return `${children}`;
+      case 'block-quote':
+        return `> ${children}`;
+      case 'bulleted-list':
+      case 'numbered-list':
+        return `${children}`;
+      case 'list-item': {
+        const prefix = parentType === 'numbered-list' ? '1. ' : '- ';
+        const indentedPrefix = `${indentation}${prefix}`;
+        return `${indentedPrefix}${children}\n`;
+      }
+      case 'code-block':
+        return `\`\`\`\n${children}\n\`\`\``;
+      case 'link':
+        return `[${children}](${formattedNode.url})`;
+      default:
+        return `${children}`;
+    }
+  };
+
+  const handleSubmit = () => {
+    const text = serializeToMarkdown(editor.children as Descendant[]);
+    if (text) {
+      sendMessage({
+        text,
+      });
+      const point = { path: [0, 0], offset: 0 };
+      editor.selection = { anchor: point, focus: point };
+      editor.history = { redos: [], undos: [] };
+      editor.children = initialValue;
+    }
+  };
 
   return (
     <Slate editor={editor} initialValue={initialValue}>
-      <div className="relative rounded-md border border-[#565856] has-[:focus]:border-[#868686] bg-[#22252a]">
+      <div className="input-container relative rounded-md border border-[#565856] has-[:focus]:border-[#868686] bg-[#22252a]">
         <div className="[&>.formatting]:has-[:focus]:opacity-100 [&>.formatting]:has-[:focus]:select-text flex flex-col">
           {/* Formatting */}
           <div className="formatting opacity-30 flex p-1 w-full rounded-t-lg cursor-text">
@@ -120,15 +216,15 @@ const InputContainer = () => {
             <div className="flex grow text-[14.8px] leading-[1.46668] px-3 py-2">
               <div className="flex-1 min-h-[22px]">
                 <Editable
-                  renderElement={renderElement as any}
+                  renderElement={renderElement as never}
                   renderLeaf={renderLeaf}
-                  placeholder={`Mesage #career-advice`}
+                  placeholder={`Mesage #${channelName}`}
                   className="editable outline-none"
                   spellCheck
                   autoFocus
                   onKeyDown={(event) => {
                     for (const hotkey in HOTKEYS) {
-                      if (isHotkey(hotkey, event as any)) {
+                      if (isHotkey(hotkey, event as never)) {
                         event.preventDefault();
                         const mark = HOTKEYS[hotkey];
                         toggleMark(editor, mark);
@@ -178,7 +274,7 @@ const InputContainer = () => {
                 icon={<SlashBox color="var(--icon-gray)" />}
               />
             </div>
-            <button>Send</button>
+            <button onClick={handleSubmit}>Send</button>
           </div>
         </div>
       </div>
@@ -194,15 +290,12 @@ const toggleBlock = (editor: Editor, format: string) => {
     match: (n) =>
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
-      LIST_TYPES.includes((n as any).type),
+      LIST_TYPES.includes((n as Descendant).type),
     split: true,
   });
-  let newProperties: Partial<SlateElement> & { align?: string; type?: string };
-
-  newProperties = {
+  const newProperties: Partial<Descendant> = {
     type: isActive ? 'paragraph' : isList ? 'list-item' : format,
   };
-
   Transforms.setNodes<SlateElement>(editor, newProperties);
 
   if (!isActive && isList) {
@@ -231,7 +324,7 @@ const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        (n as any)[blockType] === format,
+        (n as never)[blockType] === format,
     })
   );
 
@@ -240,7 +333,7 @@ const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
 
 const isMarkActive = (editor: Editor, format: string) => {
   const marks = Editor.marks(editor) as null;
-  return marks ? marks[format] === true : false;
+  return marks ? marks[format] : false;
 };
 
 type ElementProps = RenderElementProps & {
@@ -308,23 +401,12 @@ interface ButtonProps {
   type?: 'mark' | 'block';
 }
 
-const Button = ({
-  active = false,
-  className,
-  format,
-  icon,
-  type,
-}: ButtonProps) => {
+const Button = ({ className, format, icon, type }: ButtonProps) => {
   const editor = useSlate();
-  const isActive = useMemo(() => {
-    if (type === 'block') {
-      return isBlockActive(editor, format);
-    } else if (type === 'mark') {
-      return isMarkActive(editor, format);
-    } else {
-      return active;
-    }
-  }, [active, editor, format, type]);
+  const isActive =
+    type === 'block'
+      ? isBlockActive(editor, format)
+      : isMarkActive(editor, format);
 
   return (
     <button
@@ -348,7 +430,6 @@ const Button = ({
 };
 
 type Descendant = Omit<SlateDescendant, 'children'> & {
-  align?: string;
   children: (
     | {
         text: string;
@@ -365,44 +446,17 @@ type Descendant = Omit<SlateDescendant, 'children'> & {
         text: string;
         code: boolean;
       }
+    | {
+        text: string;
+        underline: boolean;
+      }
+    | {
+        text: string;
+        strikethrough: boolean;
+      }
   )[];
+  url?: string;
   type: string;
 };
-
-const initialValue: Descendant[] = [
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable ' },
-      { text: 'rich', bold: true },
-      { text: ' text, ' },
-      { text: 'much', italic: true },
-      { text: ' better than a ' },
-      { text: '<textarea>', code: true },
-      { text: '!' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: "Since it's rich text, you can do things like turn a selection of text ",
-      },
-      { text: 'bold', bold: true },
-      {
-        text: ', or add a semantically rendered block quote in the middle of the page, like this:',
-      },
-    ],
-  },
-  {
-    type: 'block-quote',
-    children: [{ text: 'A wise quote.' }],
-  },
-  {
-    type: 'paragraph',
-    align: 'center',
-    children: [{ text: 'Try it out for yourself!' }],
-  },
-];
 
 export default InputContainer;

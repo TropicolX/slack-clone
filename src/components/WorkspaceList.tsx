@@ -44,7 +44,7 @@ const WorkspaceList = ({
               <img
                 src={workspace.image || placeholderImage}
                 alt="workspace-image"
-                className="rounded-[5px] mr-4 h-[75px] w-[75px]"
+                className="rounded-[5px] mr-4 h-[75px] w-[75px] object-cover"
               />
               <div className="flex flex-col my-auto text-black">
                 <span className="text-lg font-bold mb-2">{workspace.name}</span>

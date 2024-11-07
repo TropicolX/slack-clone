@@ -2,14 +2,14 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Channel as PrismaChannel } from '@prisma/client';
 import { useUser } from '@clerk/nextjs';
-import { Channel as StreamChannel } from 'stream-chat';
+import { Channel as ChannelType } from 'stream-chat';
 import { DefaultStreamChatGenerics } from 'stream-chat-react';
 import clsx from 'clsx';
 
 import { AppContext } from '../../layout';
+import ChannelChat from '@/components/ChannelChat';
 import Files from '@/components/icons/Files';
 import Hash from '@/components/icons/Hash';
-import InputContainer from '@/components/InputContainer';
 import Message from '@/components/icons/Message';
 import MoreVert from '@/components/icons/MoreVert';
 import Pin from '@/components/icons/Pin';
@@ -35,7 +35,7 @@ const Channel = ({ params }: ChannelProps) => {
   } = useContext(AppContext);
   const [channel, setChannel] = useState<PrismaChannel>();
   const [chatChannel, setChatChannel] =
-    useState<StreamChannel<DefaultStreamChatGenerics>>();
+    useState<ChannelType<DefaultStreamChatGenerics>>();
   const [channelLoading, setChannelLoading] = useState(true);
 
   const [pageWidth, setPageWidth] = useState(0);
@@ -114,7 +114,7 @@ const Channel = ({ params }: ChannelProps) => {
   return (
     <div
       ref={layoutRef}
-      className="w-full h-full z-100 flex flex-col overflow-hidden text-channel-gray"
+      className="channel bg-[#1a1d21] font-lato w-full h-full z-100 flex flex-col overflow-hidden text-channel-gray"
     >
       {/* Toolbar */}
       <div className="pl-4 pr-3 h-[49px] flex items-center flex-shrink-0 justify-between">
@@ -190,18 +190,16 @@ const Channel = ({ params }: ChannelProps) => {
                 {channelLoading && (
                   <div className="div">I&apos;m loading...</div>
                 )}
-                {!channelLoading && (
-                  <div className="w-? h-[7909.34px]">I&apos;m here</div>
-                )}
+                {!channelLoading && <ChannelChat channel={chatChannel!} />}
               </div>
             </div>
           </div>
         </div>
         {/* Footer */}
         <div className="relative max-h-[calc(100%-36px)] flex flex-col -mt-2 px-5">
-          <div className="flex-1">
+          <div id="message-input" className="flex-1">
             {/* Input container */}
-            <InputContainer />
+            {/* <InputContainer /> */}
           </div>
           <div className="w-full flex items-center h-6 pl-3 pr-2"></div>
         </div>
