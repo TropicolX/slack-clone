@@ -137,6 +137,10 @@ const Channel = ({ params }: ChannelProps) => {
       await leaveCall();
     }
     const newCall = videoClient?.call('default', channelId);
+    const currentMembers = workspace?.memberships.map((m) => ({
+      user_id: m.userId,
+      role: m.role!,
+    }));
 
     await newCall.getOrCreate({
       ring: true,
@@ -147,19 +151,13 @@ const Channel = ({ params }: ChannelProps) => {
           createdBy: user?.fullName,
           createdByUserImage: user?.imageUrl,
         },
-        members: workspace.memberships.map((m) => ({
-          user_id: m.userId,
-          role: m.role!,
-        })),
+        members: currentMembers,
       },
     });
 
-    // await newCall.updateCallMembers({
-    //   update_members: workspace.memberships.map((m) => ({
-    //     user_id: m.userId,
-    //     role: m.role!,
-    //   })),
-    // });
+    await newCall.updateCallMembers({
+      update_members: currentMembers,
+    });
 
     await newCall?.join();
   }, [
