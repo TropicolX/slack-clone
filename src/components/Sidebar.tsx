@@ -193,9 +193,11 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
           />
           <AddChannelModal open={isModalOpen} onClose={onModalClose} />
           {/* Huddle */}
-          <StreamCall call={call}>
-            <Huddle />
-          </StreamCall>
+          {call && (
+            <StreamCall call={call}>
+              <Huddle />
+            </StreamCall>
+          )}
         </>
       )}
     </div>
