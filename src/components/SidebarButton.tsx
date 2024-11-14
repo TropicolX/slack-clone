@@ -1,4 +1,4 @@
-import { ComponentType, ReactNode } from 'react';
+import { ComponentType } from 'react';
 import clsx from 'clsx';
 
 export interface SidebarButtonProps {
