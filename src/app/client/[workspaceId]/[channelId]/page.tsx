@@ -154,6 +154,13 @@ const Channel = ({ params }: ChannelProps) => {
       },
     });
 
+    // await newCall.updateCallMembers({
+    //   update_members: workspace.memberships.map((m) => ({
+    //     user_id: m.userId,
+    //     role: m.role!,
+    //   })),
+    // });
+
     await newCall?.join();
   }, [
     call,
@@ -162,7 +169,7 @@ const Channel = ({ params }: ChannelProps) => {
     leaveCall,
     user,
     videoClient,
-    workspace.memberships,
+    workspace?.memberships,
   ]);
 
   const toggleCall = useCallback(async () => {
