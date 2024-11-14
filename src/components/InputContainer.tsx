@@ -1,19 +1,5 @@
 import { ReactNode, useCallback, useContext, useMemo } from 'react';
 import clsx from 'clsx';
-import isHotkey from 'is-hotkey';
-import {
-  Editor,
-  Transforms,
-  createEditor,
-  Descendant as SlateDescendant,
-  Element as SlateElement,
-  Text,
-} from 'slate';
-import { withHistory } from 'slate-history';
-import {
-  useChannelActionContext,
-  useChannelStateContext,
-} from 'stream-chat-react';
 import {
   Editable,
   withReact,
@@ -22,24 +8,68 @@ import {
   RenderLeafProps,
   RenderElementProps,
 } from 'slate-react';
+import {
+  Editor,
+  Transforms,
+  createEditor,
+  Descendant as SlateDescendant,
+  Element as SlateElement,
+  Text,
+} from 'slate';
+import isHotkey from 'is-hotkey';
+import { withHistory } from 'slate-history';
+import {
+  useChannelActionContext,
+  useChannelStateContext,
+} from 'stream-chat-react';
 
 import { AppContext } from '../app/client/layout';
 import Bold from './icons/Bold';
 import BulletedList from './icons/BulletedList';
 import Code from './icons/Code';
+import CodeBlock from './icons/CodeBlock';
+import Emoji from './icons/Emoji';
+import Formatting from './icons/Formatting';
 import Italic from './icons/Italic';
+import Link from './icons/Link';
+import Mentions from './icons/Mentions';
+import Microphone from './icons/Microphone';
 import NumberedList from './icons/NumberedList';
 import Plus from './icons/Plus';
 import Quote from './icons/Quote';
 import Strikethrough from './icons/Strikethrough';
-import Link from './icons/Link';
-import CodeBlock from './icons/CodeBlock';
-import Formatting from './icons/Formatting';
-import Emoji from './icons/Emoji';
-import Mentions from './icons/Mentions';
-import Video from './icons/Video';
-import Microphone from './icons/Microphone';
 import SlashBox from './icons/SlashBox';
+import Video from './icons/Video';
+
+type Descendant = Omit<SlateDescendant, 'children'> & {
+  children: (
+    | {
+        text: string;
+      }
+    | {
+        text: string;
+        bold: boolean;
+      }
+    | {
+        text: string;
+        italic: boolean;
+      }
+    | {
+        text: string;
+        code: boolean;
+      }
+    | {
+        text: string;
+        underline: boolean;
+      }
+    | {
+        text: string;
+        strikethrough: boolean;
+      }
+  )[];
+  url?: string;
+  type: string;
+};
 
 const HOTKEYS: {
   [key: string]: string;
@@ -60,14 +90,14 @@ const initialValue: Descendant[] = [
 ];
 
 const InputContainer = () => {
-  // Links
+  // Send button
   // Codeblocks
   // Quotes
-  // Mentions
   // Images
-  // Files
   // Emojis
-  // Send button
+  // Mentions
+  // Links
+  // Files
 
   const { workspace } = useContext(AppContext);
   const { channel } = useChannelStateContext();
@@ -427,36 +457,6 @@ const Button = ({ className, format, icon, type }: ButtonProps) => {
       {icon}
     </button>
   );
-};
-
-type Descendant = Omit<SlateDescendant, 'children'> & {
-  children: (
-    | {
-        text: string;
-      }
-    | {
-        text: string;
-        bold: boolean;
-      }
-    | {
-        text: string;
-        italic: boolean;
-      }
-    | {
-        text: string;
-        code: boolean;
-      }
-    | {
-        text: string;
-        underline: boolean;
-      }
-    | {
-        text: string;
-        strikethrough: boolean;
-      }
-  )[];
-  url?: string;
-  type: string;
 };
 
 export default InputContainer;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface MicrophoneProps {
-  color: string;
+  color?: string;
   size?: number;
 }
 

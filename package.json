@@ -24,7 +24,8 @@
     "slate-react": "^0.110.2",
     "sqlite3": "^5.1.7",
     "stream-chat": "^8.41.1",
-    "stream-chat-react": "^12.4.1"
+    "stream-chat-react": "^12.4.1",
+    "svix": "^1.40.0"
   },
   "devDependencies": {
     "@types/is-hotkey": "^0.1.10",

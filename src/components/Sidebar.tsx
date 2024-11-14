@@ -16,6 +16,8 @@ import SidebarButton from './SidebarButton';
 import Threads from './icons/Threads';
 import Plus from './icons/Plus';
 import AddChannelModal from './AddChannelModal';
+import Huddle from './Huddle';
+import { StreamCall, useCalls } from '@stream-io/video-react-sdk';
 
 const [minWidth, defaultWidth] = [180, 275];
 
@@ -27,7 +29,8 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useUser();
-  const { loading, workspace } = useContext(AppContext);
+  const { loading, setChannel, workspace } = useContext(AppContext);
+  const [call] = useCalls();
 
   const [width, setWidth] = useState<number>(() => {
     const savedWidth =
@@ -98,6 +101,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
   }, [width, layoutWidth, maxWidth]);
 
   const goToChannel = (channelId: string) => {
+    setChannel(workspace.channels.find((c) => c.id === channelId)!);
     router.push(`/client/${workspace.id}/${channelId}`);
   };
 
@@ -137,11 +141,15 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
             </div>
             <div className="flex ">
               <IconButton
-                icon={<Refine color="var(--icon-gray)" />}
+                icon={
+                  <Refine className="fill-icon-gray group-hover:fill-white" />
+                }
                 className="w-9 h-9 hover:bg-hover-gray"
               />
               <IconButton
-                icon={<Compose color="var(--icon-gray)" />}
+                icon={
+                  <Compose className="fill-icon-gray group-hover:fill-white" />
+                }
                 className="w-9 h-9 hover:bg-hover-gray"
               />
             </div>
@@ -184,6 +192,10 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
             }}
           />
           <AddChannelModal open={isModalOpen} onClose={onModalClose} />
+          {/* Huddle */}
+          <StreamCall call={call}>
+            <Huddle />
+          </StreamCall>
         </>
       )}
     </div>

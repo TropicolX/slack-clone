@@ -13,7 +13,7 @@ interface AddChannelModalProps {
 
 const AddChannelModal = ({ open, onClose }: AddChannelModalProps) => {
   const router = useRouter();
-  const { workspace, setWorkspace } = useContext(AppContext);
+  const { setChannel, workspace, setWorkspace } = useContext(AppContext);
   const [channelName, setChannelName] = useState('');
   const [channelDescription, setChannelDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,6 +49,7 @@ const AddChannelModal = ({ open, onClose }: AddChannelModalProps) => {
             ...workspace,
             channels: [...workspace.channels, { ...channel }],
           });
+          setChannel(channel);
           setLoading(false);
           closeModal();
           router.push(`/client/${workspace.id}/${channel.id}`);

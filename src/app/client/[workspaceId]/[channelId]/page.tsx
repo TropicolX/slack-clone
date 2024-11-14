@@ -1,19 +1,22 @@
 'use client';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { Channel as PrismaChannel } from '@prisma/client';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Channel as ChannelType } from 'stream-chat';
 import { DefaultStreamChatGenerics } from 'stream-chat-react';
+import { OwnCapability, useCalls } from '@stream-io/video-react-sdk';
 import clsx from 'clsx';
 
 import { AppContext } from '../../layout';
+import CaretDown from '@/components/icons/CaretDown';
 import ChannelChat from '@/components/ChannelChat';
 import Files from '@/components/icons/Files';
 import Hash from '@/components/icons/Hash';
+import Headphones from '@/components/icons/Headphones';
 import Message from '@/components/icons/Message';
 import MoreVert from '@/components/icons/MoreVert';
 import Pin from '@/components/icons/Pin';
 import Plus from '@/components/icons/Plus';
+import User from '@/components/icons/User';
 
 interface ChannelProps {
   params: {
@@ -32,8 +35,11 @@ const Channel = ({ params }: ChannelProps) => {
     workspace,
     setWorkspace,
     setOtherWorkspaces,
+    channel,
+    setChannel,
+    videoClient,
   } = useContext(AppContext);
-  const [channel, setChannel] = useState<PrismaChannel>();
+  const [call] = useCalls();
   const [chatChannel, setChatChannel] =
     useState<ChannelType<DefaultStreamChatGenerics>>();
   const [channelLoading, setChannelLoading] = useState(true);
@@ -78,7 +84,9 @@ const Channel = ({ params }: ChannelProps) => {
     };
 
     const loadChannel = () => {
-      const channel = chatClient.channel('messaging', channelId);
+      const channel = chatClient.channel('messaging', channelId, {
+        members: workspace.memberships.map((m) => m.userId),
+      });
       setChatChannel(channel);
       setChannelLoading(false);
     };
@@ -88,7 +96,7 @@ const Channel = ({ params }: ChannelProps) => {
         await loadWorkspace();
       } else {
         if (!channel)
-          setChannel(workspace.channels.find((c) => c.id === channelId));
+          setChannel(workspace.channels.find((c) => c.id === channelId)!);
         if (loading) setLoading(false);
         if (chatClient) loadChannel();
       }
@@ -97,6 +105,7 @@ const Channel = ({ params }: ChannelProps) => {
     if (!chatChannel && user) loadWorkspaceAndChannel();
   }, [
     channel,
+    setChannel,
     loading,
     chatChannel,
     chatClient,
@@ -108,6 +117,56 @@ const Channel = ({ params }: ChannelProps) => {
     setOtherWorkspaces,
     user,
   ]);
+
+  const callingToActiveChannel = call?.state.custom.channelId === channelId;
+
+  const leaveCall = useCallback(async () => {
+    const canEndCall = call?.permissionsContext.hasPermission(
+      OwnCapability.END_CALL
+    );
+
+    if (canEndCall) {
+      await call?.endCall();
+    } else {
+      await call?.leave({});
+    }
+  }, [call]);
+
+  const createCall = useCallback(async () => {
+    if (call) {
+      await leaveCall();
+    }
+    const newCall = videoClient?.call('default', channelId);
+
+    await newCall.getOrCreate({
+      ring: true,
+      data: {
+        custom: {
+          channelId,
+          channelName: channel?.name,
+          createdBy: user?.fullName,
+          createdByUserImage: user?.imageUrl,
+        },
+        members: workspace.memberships.map((m) => ({
+          user_id: m.userId,
+          role: m.role!,
+        })),
+      },
+    });
+
+    await newCall?.join();
+  }, [call, channel, channelId, leaveCall, videoClient, workspace]);
+
+  const toggleCall = useCallback(async () => {
+    if (callingToActiveChannel) {
+      await leaveCall();
+    } else {
+      await createCall();
+    }
+  }, [callingToActiveChannel, createCall, leaveCall]);
+
+  console.log(callingToActiveChannel);
+  console.log(call);
 
   if (loading) return null;
 
@@ -139,13 +198,46 @@ const Channel = ({ params }: ChannelProps) => {
         <div className="flex flex-none ml-auto items-center">
           <button
             className={clsx(
-              'w-[106.2px] items-center pl-[3px] py-[3px] rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]',
+              'flex items-center pl-2 py-[3px] rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3] hover:bg-[#25272b]',
               pageWidth > 0 && pageWidth < 605 ? 'hidden' : 'flex'
             )}
-          ></button>
-          <div className="w-[59px] flex items-center ml-2 rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]">
-            <button className=""></button>
-            <button className=""></button>
+          >
+            <User color="var(--icon-gray)" />
+            <span className="pl-1 pr-2 text-[12.8px]">
+              {workspace.memberships.length}
+            </span>
+          </button>
+          <div
+            className={clsx(
+              'w-[59px] flex items-center ml-2 rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]',
+              callingToActiveChannel && 'bg-[#259b69] border-[#259b69]'
+            )}
+          >
+            <button
+              onClick={toggleCall}
+              className={clsx(
+                'px-2 h-[26px] hover:bg-[#25272b] rounded-l-lg',
+                callingToActiveChannel && 'bg-[#259b69] hover:bg-[#259b69]'
+              )}
+            >
+              <Headphones
+                color={call ? 'var(--primary)' : 'var(--icon-gray)'}
+              />
+            </button>
+            <div
+              className={clsx(
+                'h-5 w-[1px] bg-[#797c814d]',
+                callingToActiveChannel && 'bg-white'
+              )}
+            />
+            <button
+              className={clsx(
+                'w-5 h-[26px] hover:bg-[#25272b] rounded-r-lg',
+                callingToActiveChannel && 'bg-[#259b69] hover:bg-[#259b69]'
+              )}
+            >
+              <CaretDown color={call ? 'var(--primary)' : 'var(--icon-gray)'} />
+            </button>
           </div>
           <button className="group rounded-lg flex w-7 h-7 ml-2 items-center justify-center hover:bg-[#d1d2d30b]">
             <MoreVert className="fill-[#e8e8e8b3] group-hover:fill-channel-gray" />
@@ -197,10 +289,7 @@ const Channel = ({ params }: ChannelProps) => {
         </div>
         {/* Footer */}
         <div className="relative max-h-[calc(100%-36px)] flex flex-col -mt-2 px-5">
-          <div id="message-input" className="flex-1">
-            {/* Input container */}
-            {/* <InputContainer /> */}
-          </div>
+          <div id="message-input" className="flex-1"></div>
           <div className="w-full flex items-center h-6 pl-3 pr-2"></div>
         </div>
       </div>

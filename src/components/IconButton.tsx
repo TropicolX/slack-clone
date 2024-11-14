@@ -5,16 +5,14 @@ export interface IconButtonProps {
   disabled?: boolean;
   icon: ReactNode;
   onClick?: () => void;
-  // variant?: 'primary' | 'secondary';
   title?: string;
   className?: string;
 }
 
 const IconButton = ({
-  disabled,
+  disabled = false,
   icon,
   onClick,
-  // variant = 'primary',
   title,
   className,
 }: IconButtonProps) => {
@@ -23,7 +21,7 @@ const IconButton = ({
       onClick={onClick}
       title={title}
       className={clsx(
-        'p-[3px] m-[1px] rounded cursor-pointer inline-flex items-center justify-center hover:bg-[#f8f8f840] disabled:bg-transparent [&_path]:disabled:fill-[#8a8b8d]',
+        'group p-[3px] m-[1px] rounded cursor-pointer inline-flex items-center justify-center hover:bg-[#f8f8f840] disabled:bg-transparent [&_path]:disabled:fill-[#8a8b8d]',
         className
       )}
       disabled={disabled}

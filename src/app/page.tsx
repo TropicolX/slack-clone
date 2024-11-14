@@ -99,7 +99,7 @@ export default async function Home() {
         workspace: {
           connect: { id: invitation!.workspaceId },
         },
-        role: 'member',
+        role: 'user',
       },
     });
 

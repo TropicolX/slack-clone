@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface VideoProps {
-  color: string;
+  color?: string;
   size?: number;
 }
 
