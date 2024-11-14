@@ -1,8 +1,4 @@
-import React from 'react';
-
-interface SignalProps {}
-
-const Signal = ({}: SignalProps) => {
+const Signal = ({}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

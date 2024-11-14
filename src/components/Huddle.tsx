@@ -1,10 +1,8 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
-  RingingCall,
   CallingState,
   useCall,
   useCallStateHooks,
-  PaginatedGridLayout,
   StreamTheme,
   OwnCapability,
 } from '@stream-io/video-react-sdk';
@@ -24,8 +22,6 @@ import Desktop from './icons/Desktop';
 
 const Huddle = () => {
   const call = useCall();
-
-  if (!call) return null;
 
   const { channel } = useContext(AppContext);
   const { useCallCallingState, useCallCustomData } = useCallStateHooks();
@@ -57,26 +53,28 @@ const Huddle = () => {
     );
 
     if (canEndCall) {
-      await call.endCall();
+      await call?.endCall();
     } else {
-      await call.leave();
+      await call?.leave();
     }
   }, [call]);
 
   const joinCall = () => {
-    call.join();
+    call?.join();
   };
 
   const declineCall = () => {
-    call.leave({
+    call?.leave({
       reject: true,
     });
   };
 
+  const buttonsDisabled = callingState === CallingState.JOINING;
+
+  if (!call) return null;
+
   // console.log(callingToActiveChannel);
   // console.log(call);
-
-  const buttonsDisabled = callingState === CallingState.JOINING;
 
   switch (true) {
     case callingState === CallingState.RINGING && !callingToActiveChannel:

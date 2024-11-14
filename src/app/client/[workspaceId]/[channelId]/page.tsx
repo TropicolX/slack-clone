@@ -155,7 +155,7 @@ const Channel = ({ params }: ChannelProps) => {
     });
 
     await newCall?.join();
-  }, [call, channel, channelId, leaveCall, videoClient, workspace]);
+  }, [call, channel, channelId, leaveCall, user, videoClient, workspace]);
 
   const toggleCall = useCallback(async () => {
     if (callingToActiveChannel) {
