@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Channel as ChannelType } from 'stream-chat';
 import { DefaultStreamChatGenerics } from 'stream-chat-react';
-import { CallingState, StreamCall, useCalls } from '@stream-io/video-react-sdk';
+import { StreamCall, useCalls } from '@stream-io/video-react-sdk';
 import clsx from 'clsx';
 
 import { AppContext } from '../../layout';
@@ -135,7 +135,7 @@ const Channel = ({ params }: ChannelProps) => {
     if (currentCall?.id === channelId) {
       setChannelCall(currentCall);
     }
-  }, [currentCall]);
+  }, [currentCall, channelId, setChannelCall]);
 
   if (loading) return null;
 

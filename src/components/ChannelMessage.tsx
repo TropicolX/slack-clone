@@ -11,7 +11,7 @@ const ChannelMessage = () => {
   // Delete message
   // Edit message
   // Add reaction
-  // Reply to thread
+  // Reply to thread?
   // If previous message is from the same user, hide the avatar? There's also the time difference between messages
 
   const { message } = useMessageContext();

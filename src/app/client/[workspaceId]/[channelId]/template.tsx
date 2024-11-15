@@ -1,6 +1,6 @@
 'use client';
 import { useContext, useMemo } from 'react';
-import { CallingState, StreamCall, useCalls } from '@stream-io/video-react-sdk';
+import { StreamCall, useCalls } from '@stream-io/video-react-sdk';
 import { createPortal } from 'react-dom';
 
 import { AppContext } from '../../layout';

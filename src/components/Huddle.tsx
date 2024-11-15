@@ -41,6 +41,7 @@ const Huddle = () => {
     return () => {
       resizeObserver.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [huddleRef.current]);
 
   const leaveCall = useCallback(async () => {
