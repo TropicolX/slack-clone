@@ -1,9 +1,9 @@
 'use client';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Channel as ChannelType } from 'stream-chat';
 import { DefaultStreamChatGenerics } from 'stream-chat-react';
-import { OwnCapability, useCalls } from '@stream-io/video-react-sdk';
+import { CallingState, StreamCall, useCalls } from '@stream-io/video-react-sdk';
 import clsx from 'clsx';
 
 import { AppContext } from '../../layout';
@@ -12,6 +12,7 @@ import ChannelChat from '@/components/ChannelChat';
 import Files from '@/components/icons/Files';
 import Hash from '@/components/icons/Hash';
 import Headphones from '@/components/icons/Headphones';
+import HuddleButton from '@/components/HuddleToggleButton';
 import Message from '@/components/icons/Message';
 import MoreVert from '@/components/icons/MoreVert';
 import Pin from '@/components/icons/Pin';
@@ -28,6 +29,7 @@ interface ChannelProps {
 const Channel = ({ params }: ChannelProps) => {
   const { workspaceId, channelId } = params;
   const { user } = useUser();
+  const [currentCall] = useCalls();
   const {
     chatClient,
     loading,
@@ -37,13 +39,14 @@ const Channel = ({ params }: ChannelProps) => {
     setOtherWorkspaces,
     channel,
     setChannel,
+    channelCall,
+    setChannelCall,
     videoClient,
   } = useContext(AppContext);
-  const [call] = useCalls();
+
   const [chatChannel, setChatChannel] =
     useState<ChannelType<DefaultStreamChatGenerics>>();
   const [channelLoading, setChannelLoading] = useState(true);
-
   const [pageWidth, setPageWidth] = useState(0);
   const layoutRef = useRef<HTMLDivElement>(null);
 
@@ -83,10 +86,17 @@ const Channel = ({ params }: ChannelProps) => {
       }
     };
 
-    const loadChannel = () => {
+    const loadChannel = async () => {
       const channel = chatClient.channel('messaging', channelId, {
         members: workspace.memberships.map((m) => m.userId),
       });
+      if (currentCall?.id === channelId) {
+        setChannelCall(currentCall);
+      } else {
+        const channelCall = videoClient?.call('default', channelId);
+        setChannelCall(channelCall);
+      }
+
       setChatChannel(channel);
       setChannelLoading(false);
     };
@@ -108,78 +118,24 @@ const Channel = ({ params }: ChannelProps) => {
     setChannel,
     loading,
     chatChannel,
+    currentCall,
     chatClient,
+    videoClient,
     workspace,
     workspaceId,
     channelId,
     setLoading,
     setWorkspace,
     setOtherWorkspaces,
+    setChannelCall,
     user,
   ]);
 
-  const callingToActiveChannel = call?.state.custom.channelId === channelId;
-
-  const leaveCall = useCallback(async () => {
-    const canEndCall = call?.permissionsContext.hasPermission(
-      OwnCapability.END_CALL
-    );
-
-    if (canEndCall) {
-      await call?.endCall();
-    } else {
-      await call?.leave({});
+  useEffect(() => {
+    if (currentCall?.id === channelId) {
+      setChannelCall(currentCall);
     }
-  }, [call]);
-
-  const createCall = useCallback(async () => {
-    if (call) {
-      await leaveCall();
-    }
-    const newCall = videoClient?.call('default', channelId);
-    const currentMembers = workspace?.memberships.map((m) => ({
-      user_id: m.userId,
-      role: m.role!,
-    }));
-
-    await newCall.getOrCreate({
-      ring: true,
-      data: {
-        custom: {
-          channelId,
-          channelName: channel?.name,
-          createdBy: user?.fullName,
-          createdByUserImage: user?.imageUrl,
-        },
-        members: currentMembers,
-      },
-    });
-
-    await newCall.updateCallMembers({
-      update_members: currentMembers,
-    });
-
-    await newCall?.join();
-  }, [
-    call,
-    channel,
-    channelId,
-    leaveCall,
-    user,
-    videoClient,
-    workspace?.memberships,
-  ]);
-
-  const toggleCall = useCallback(async () => {
-    if (callingToActiveChannel) {
-      await leaveCall();
-    } else {
-      await createCall();
-    }
-  }, [callingToActiveChannel, createCall, leaveCall]);
-
-  console.log(callingToActiveChannel);
-  console.log(call);
+  }, [currentCall]);
 
   if (loading) return null;
 
@@ -220,38 +176,22 @@ const Channel = ({ params }: ChannelProps) => {
               {workspace.memberships.length}
             </span>
           </button>
-          <div
-            className={clsx(
-              'w-[59px] flex items-center ml-2 rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]',
-              callingToActiveChannel && 'bg-[#259b69] border-[#259b69]'
-            )}
-          >
-            <button
-              onClick={toggleCall}
-              className={clsx(
-                'px-2 h-[26px] hover:bg-[#25272b] rounded-l-lg',
-                callingToActiveChannel && 'bg-[#259b69] hover:bg-[#259b69]'
-              )}
-            >
-              <Headphones
-                color={call ? 'var(--primary)' : 'var(--icon-gray)'}
-              />
-            </button>
-            <div
-              className={clsx(
-                'h-5 w-[1px] bg-[#797c814d]',
-                callingToActiveChannel && 'bg-white'
-              )}
-            />
-            <button
-              className={clsx(
-                'w-5 h-[26px] hover:bg-[#25272b] rounded-r-lg',
-                callingToActiveChannel && 'bg-[#259b69] hover:bg-[#259b69]'
-              )}
-            >
-              <CaretDown color={call ? 'var(--primary)' : 'var(--icon-gray)'} />
-            </button>
-          </div>
+          {channelCall && (
+            <StreamCall call={channelCall}>
+              <HuddleButton currentCall={currentCall} />
+            </StreamCall>
+          )}
+          {!channelCall && (
+            <div className="w-[59px] flex items-center ml-2 rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]">
+              <button className="px-2 h-[26px] hover:bg-[#25272b] rounded-l-lg">
+                <Headphones color="var(--icon-gray)" />
+              </button>
+              <div className="h-5 w-[1px] bg-[#797c814d]" />
+              <button className="w-5 h-[26px] hover:bg-[#25272b] rounded-r-lg">
+                <CaretDown color="var(--icon-gray)" />
+              </button>
+            </div>
+          )}
           <button className="group rounded-lg flex w-7 h-7 ml-2 items-center justify-center hover:bg-[#d1d2d30b]">
             <MoreVert className="fill-[#e8e8e8b3] group-hover:fill-channel-gray" />
           </button>

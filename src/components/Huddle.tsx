@@ -1,29 +1,27 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CallingState,
-  useCall,
-  useCallStateHooks,
   StreamTheme,
   OwnCapability,
+  useCall,
+  useCallStateHooks,
 } from '@stream-io/video-react-sdk';
 
-import { AppContext } from '../app/client/layout';
 import Avatar from './Avatar';
 import CallControlButton from './CallControlButton';
+import Desktop from './icons/Desktop';
+import Emoji from './icons/Emoji';
 import IconButton from './IconButton';
 import Microphone from './icons/Microphone';
+import MoreVert from './icons/MoreVert';
 import OpenInWindow from './icons/OpenInWindow';
 import Signal from './icons/Signal';
-import Video from './icons/Video';
-import Emoji from './icons/Emoji';
 import UserAdd from './icons/UserAdd';
-import MoreVert from './icons/MoreVert';
-import Desktop from './icons/Desktop';
+import Video from './icons/Video';
+import Hash from './icons/Hash';
 
 const Huddle = () => {
   const call = useCall();
-
-  const { channel } = useContext(AppContext);
   const { useCallCallingState, useCallCustomData } = useCallStateHooks();
   const callingState = useCallCallingState();
   const customData = useCallCustomData();
@@ -43,9 +41,7 @@ const Huddle = () => {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [huddleRef]);
-
-  const callingToActiveChannel = channel?.id === customData.channelId;
+  }, [huddleRef.current]);
 
   const leaveCall = useCallback(async () => {
     const canEndCall = call?.permissionsContext.hasPermission(
@@ -73,11 +69,9 @@ const Huddle = () => {
 
   if (!call) return null;
 
-  // console.log(callingToActiveChannel);
-  // console.log(call);
-
   switch (true) {
-    case callingState === CallingState.RINGING && !callingToActiveChannel:
+    case callingState === CallingState.RINGING && call.isCreatedByMe:
+    default:
       return null;
     case callingState === CallingState.JOINED ||
       callingState === CallingState.JOINING:
@@ -96,7 +90,7 @@ const Huddle = () => {
                     </div>
                     <button className="w-full flex items-center text-[14.8px] hover:underline">
                       <span className="break-all whitespace-break-spaces line-clamp-1">
-                        {customData.channelName}
+                        {customData?.channelName}
                       </span>
                     </button>
                   </div>
@@ -176,23 +170,36 @@ const Huddle = () => {
           </div>
         </StreamTheme>
       );
-    case callingState === CallingState.RINGING:
+    case callingState === CallingState.RINGING && !call.isCreatedByMe:
       return (
         <StreamTheme>
           <div className="absolute pr-4 bottom-2 left-2 w-full">
             <div className="w-full max-w-[340px] p-3 bg-[#101214] rounded-xl overflow-hidden border border-[#797c814d]">
-              <div className="flex items-start text-[14.8px]">
-                <div className="mr-2"></div>
-                <p>
-                  <b>Busayo Jacobs</b> is inviting you to a huddle in this
-                  channel
+              <div className="flex items-start text-[15px]">
+                <div className="grow shrink-0 mr-2">
+                  <Avatar
+                    width={20}
+                    borderRadius={6}
+                    data={{
+                      name: customData.createdBy,
+                      image: customData.createdByUserImage,
+                    }}
+                  />
+                </div>
+                <p className="-mt-0.5">
+                  <b>{customData.createdBy}</b> is inviting you to a huddle in
+                  <span className="w-[15px] h-[15px] inline-block pt-0.5 mx-1">
+                    <Hash size={15} color="var(--primary)" />
+                    {'  '}
+                  </span>
+                  <b>{customData.channelName}</b>
                 </p>
               </div>
               <div className="mt-3 flex flex-col items-center gap-1.5">
                 <button
                   onClick={joinCall}
                   disabled={buttonsDisabled}
-                  className="w-full h-[26px] rounded-lg border border-[#e0e0e0] bg-[#e0e0e0] hover:bg-[#696a6b] hover:border-[#696a6b] px-3 text-[13px] text-[#101214] font-bold"
+                  className="w-full h-[26px] rounded-lg border border-[#e0e0e0] bg-[#e0e0e0] px-3 text-[13px] text-[#101214] font-bold"
                 >
                   Join
                 </button>
@@ -208,8 +215,6 @@ const Huddle = () => {
           </div>
         </StreamTheme>
       );
-    default:
-      return null;
   }
 };
 

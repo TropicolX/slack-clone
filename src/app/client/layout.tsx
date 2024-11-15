@@ -9,7 +9,11 @@ import {
 import { UserButton, useUser } from '@clerk/nextjs';
 import { StreamChat } from 'stream-chat';
 import { Chat } from 'stream-chat-react';
-import { StreamVideo, StreamVideoClient } from '@stream-io/video-react-sdk';
+import {
+  Call,
+  StreamVideo,
+  StreamVideoClient,
+} from '@stream-io/video-react-sdk';
 
 import ArrowBack from '@/components/icons/ArrowBack';
 import ArrowForward from '@/components/icons/ArrowForward';
@@ -55,6 +59,8 @@ export const AppContext = createContext<{
   setChatClient: (chatClient: StreamChat) => void;
   videoClient: StreamVideoClient;
   setVideoClient: (videoClient: StreamVideoClient) => void;
+  channelCall: Call | undefined;
+  setChannelCall: (call: Call) => void;
 }>({
   workspace: {} as Workspace,
   setWorkspace: () => {},
@@ -68,6 +74,8 @@ export const AppContext = createContext<{
   setChatClient: () => {},
   videoClient: {} as StreamVideoClient,
   setVideoClient: () => {},
+  channelCall: undefined,
+  setChannelCall: () => {},
 });
 
 const tokenProvider = async (userId: string) => {
@@ -92,7 +100,7 @@ const Layout = ({ children }: LayoutProps) => {
   const [otherWorkspaces, setOtherWorkspaces] = useState<Workspace[]>([]);
   const [chatClient, setChatClient] = useState<StreamChat>();
   const [videoClient, setVideoClient] = useState<StreamVideoClient>();
-  // const [call, setCall] = useState<Call>();
+  const [channelCall, setChannelCall] = useState<Call>();
 
   useEffect(() => {
     const customProvider = async () => {
@@ -155,6 +163,8 @@ const Layout = ({ children }: LayoutProps) => {
         setChatClient,
         videoClient,
         setVideoClient,
+        channelCall,
+        setChannelCall,
       }}
     >
       <Chat client={chatClient}>

@@ -16,8 +16,6 @@ import SidebarButton from './SidebarButton';
 import Threads from './icons/Threads';
 import Plus from './icons/Plus';
 import AddChannelModal from './AddChannelModal';
-import Huddle from './Huddle';
-import { StreamCall, useCalls } from '@stream-io/video-react-sdk';
 
 const [minWidth, defaultWidth] = [180, 275];
 
@@ -30,7 +28,6 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
   const pathname = usePathname();
   const { user } = useUser();
   const { loading, setChannel, workspace } = useContext(AppContext);
-  const [call] = useCalls();
 
   const [width, setWidth] = useState<number>(() => {
     const savedWidth =
@@ -120,6 +117,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
 
   return (
     <div
+      id="sidebar"
       style={{ width: `${width}px` }}
       className={clsx(
         'relative px-2 flex flex-col flex-shrink-0 gap-3 min-w-0 min-h-0 max-h-[calc(100vh-44px)] bg-[#10121499] border-r-[1px] border-solid',
@@ -192,12 +190,6 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
             }}
           />
           <AddChannelModal open={isModalOpen} onClose={onModalClose} />
-          {/* Huddle */}
-          {call && (
-            <StreamCall call={call}>
-              <Huddle />
-            </StreamCall>
-          )}
         </>
       )}
     </div>
