@@ -91,11 +91,11 @@ const initialValue: Descendant[] = [
 
 const InputContainer = () => {
   // Send button
-  // Codeblocks
-  // Quotes
+  // Codeblocks *
+  // Quotes *
+  // Emojis *
+  // Mentions *
   // Images
-  // Emojis
-  // Mentions
   // Links
   // Files
 

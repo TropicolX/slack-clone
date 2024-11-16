@@ -13,7 +13,6 @@
     --gray-10: 33, 36, 40;
   }
 
-
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
@@ -29,10 +28,10 @@
     background: #7d7e81;
   }
 
-  .input-container ul>li:before,
-  .input-container ol>li:before,
-  .channel .str-chat__message-text ul>li:before,
-  .channel .str-chat__message-text ol>li:before {
+  .input-container ul > li:before,
+  .input-container ol > li:before,
+  .channel .str-chat__message-text ul > li:before,
+  .channel .str-chat__message-text ol > li:before {
     color: var(--channel-gray);
     display: inline-block;
     width: 24px;
@@ -42,8 +41,8 @@
     content: '•';
   }
 
-  .input-container ul>li:before,
-  .channel .str-chat__message-text ul>li:before {
+  .input-container ul > li:before,
+  .channel .str-chat__message-text ul > li:before {
     height: 15px;
     font-size: 17px;
     line-height: 17px;
@@ -54,23 +53,23 @@
     counter-reset: list-0;
   }
 
-  .input-container ol>li:before,
-  .channel .str-chat__message-text ol>li:before {
+  .input-container ol > li:before,
+  .channel .str-chat__message-text ol > li:before {
     counter-increment: list-0;
     content: counter(list-0, decimal) '. ';
   }
 
-  .input-container ol>li,
-  .input-container ul>li,
-  .channel .str-chat__message-text ol>li,
-  .channel .str-chat__message-text ul>li {
+  .input-container ol > li,
+  .input-container ul > li,
+  .channel .str-chat__message-text ol > li,
+  .channel .str-chat__message-text ul > li {
     margin-left: 24px;
   }
 
-  .input-container ol>li>*,
-  .input-container ul>li>*,
-  .channel .str-chat__message-text ol>li>*,
-  .channel .str-chat__message-text ul>li>* {
+  .input-container ol > li > *,
+  .input-container ul > li > *,
+  .channel .str-chat__message-text ol > li > *,
+  .channel .str-chat__message-text ul > li > * {
     margin-left: 3px;
     line-height: 22px;
   }
@@ -93,7 +92,7 @@
   }
 
   .channel .str-chat {
-    background: transparent
+    background: transparent;
   }
 
   .channel .str-chat__list {
@@ -131,5 +130,166 @@
 
   .channel .str-chat__list-notifications {
     display: none;
+  }
+
+  .huddle .str-video__participant-view,
+  .huddle
+    .str-video__participant-view.str-video__participant-view--dominant-speaker {
+    max-width: 500px;
+  }
+
+  .huddle .str-video__video-placeholder .str-video__video-placeholder__avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+  }
+
+  .huddle.huddle--sidebar
+    .str-video__paginated-grid-layout
+    .str-video__paginated-grid-layout__group:has(
+      > .str-video__participant-view:first-child:nth-last-child(2)
+    ) {
+    flex-direction: column;
+    height: 220px;
+  }
+
+  .huddle
+    .str-video__paginated-grid-layout--two-four
+    .str-video__participant-view {
+    max-width: calc(calc(720px - 6rem) / 2 - 6px);
+  }
+
+  .huddle
+    .str-video__speech-indicator.str-video__speech-indicator--dominant
+    .str-video__speech-indicator__bar,
+  .huddle .str-video__speech-indicator .str-video__speech-indicator__bar {
+    background-color: #42b659 !important;
+    width: 3px !important;
+    border-radius: 999px !important;
+  }
+
+  .huddle .str-video__menu-container {
+    background: #222529;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3),
+      0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    width: 250px;
+  }
+
+  .huddle .str-video__generic-menu {
+    padding: 8px 0;
+    gap: 4px;
+  }
+
+  .huddle .str-video__generic-menu--item {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    height: 28px;
+  }
+
+  .huddle .str-video__generic-menu .str-video__generic-menu--item button {
+    border-radius: 0;
+    background: transparent;
+    color: #e8eaed;
+    padding: 0 16px;
+    height: 100%;
+    line-height: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+
+  .huddle .str-video__generic-menu .str-video__generic-menu--item button:hover {
+    background: #37383b;
+  }
+
+  .huddle .str-video__screen-share-overlay {
+    z-index: 10;
+  }
+
+  .huddle
+    .str-video__screen-share-overlay
+    .str-video__screen-share-overlay__title {
+    font-size: 18px;
+    color: var(--primary);
+  }
+
+  @media (max-width: 1280px) {
+    .huddle .str-video__participant-view {
+      max-width: 400px;
+    }
+
+    .huddle
+      .str-video__participant-view.str-video__participant-view--dominant-speaker {
+      max-width: 350px;
+    }
+
+    .huddle
+      .str-video__paginated-grid-layout--five-nine
+      .str-video__participant-view {
+      max-width: calc(calc(520px - 6rem) / 2 - 6px);
+    }
+
+    .huddle
+      .str-video__paginated-grid-layout--two-four
+      .str-video__participant-view {
+      max-width: calc(calc(580px - 6rem) / 2 - 6px);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .huddle .str-video__participant-view {
+      max-width: 300px;
+    }
+
+    .huddle
+      .str-video__participant-view.str-video__participant-view--dominant-speaker {
+      max-width: 250px;
+    }
+
+    .huddle
+      .str-video__paginated-grid-layout--five-nine
+      .str-video__participant-view {
+      max-width: calc(calc(380px - 6rem) / 2 - 6px);
+    }
+
+    .huddle
+      .str-video__paginated-grid-layout--two-four
+      .str-video__participant-view {
+      max-width: calc(calc(450px - 6rem) / 2 - 6px);
+    }
+
+    .huddle
+      .str-video__speaker-layout
+      .str-video__speaker-layout__participants-bar-wrapper
+      .str-video__speaker-layout__participants-bar
+      .str-video__speaker-layout__participant-tile {
+      max-width: 220px;
+      min-width: 220px;
+      width: 220px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .huddle
+      .str-video__paginated-grid-layout--two-four
+      .str-video__participant-view {
+      max-width: calc(calc(400px - 6rem) / 2 - 6px);
+    }
+
+    .huddle
+      .str-video__participant-view.str-video__participant-view--dominant-speaker {
+      max-width: 200px;
+    }
+
+    .huddle
+      .str-video__speaker-layout
+      .str-video__speaker-layout__participants-bar-wrapper
+      .str-video__speaker-layout__participants-bar
+      .str-video__speaker-layout__participant-tile {
+      max-width: 180px;
+      min-width: 180px;
+      width: 180px;
+    }
   }
 }

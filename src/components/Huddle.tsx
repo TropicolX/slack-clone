@@ -1,60 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  CallingState,
-  StreamTheme,
-  OwnCapability,
-  useCall,
-  useCallStateHooks,
-} from '@stream-io/video-react-sdk';
+import { CallingState, StreamTheme } from '@stream-io/video-react-sdk';
 
 import Avatar from './Avatar';
-import CallControlButton from './CallControlButton';
-import Desktop from './icons/Desktop';
-import Emoji from './icons/Emoji';
-import IconButton from './IconButton';
-import Microphone from './icons/Microphone';
-import MoreVert from './icons/MoreVert';
-import OpenInWindow from './icons/OpenInWindow';
-import Signal from './icons/Signal';
-import UserAdd from './icons/UserAdd';
-import Video from './icons/Video';
 import Hash from './icons/Hash';
+import HuddleUI from './HuddleUI';
+import useHuddle from '../hooks/useHuddle';
 
-const Huddle = () => {
-  const call = useCall();
-  const { useCallCallingState, useCallCustomData } = useCallStateHooks();
-  const callingState = useCallCallingState();
-  const customData = useCallCustomData();
+interface HuddleProps {
+  isModalOpen: boolean;
+  setIsModalOpen: (isOpen: boolean) => void;
+}
 
-  const [width, setWidth] = useState(0);
-  const huddleRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!huddleRef.current) return;
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setWidth(entry.contentRect.width);
-      }
-    });
-    resizeObserver.observe(huddleRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [huddleRef.current]);
-
-  const leaveCall = useCallback(async () => {
-    const canEndCall = call?.permissionsContext.hasPermission(
-      OwnCapability.END_CALL
-    );
-
-    if (canEndCall) {
-      await call?.endCall();
-    } else {
-      await call?.leave();
-    }
-  }, [call]);
+const Huddle = ({ isModalOpen, setIsModalOpen }: HuddleProps) => {
+  const { call, customData, callingState, buttonsDisabled } = useHuddle();
 
   const joinCall = () => {
     call?.join();
@@ -66,8 +23,6 @@ const Huddle = () => {
     });
   };
 
-  const buttonsDisabled = callingState === CallingState.JOINING;
-
   if (!call) return null;
 
   switch (true) {
@@ -77,99 +32,11 @@ const Huddle = () => {
     case callingState === CallingState.JOINED ||
       callingState === CallingState.JOINING:
       return (
-        <StreamTheme>
-          <div className="absolute pr-4 bottom-2 left-2 w-full">
-            <div
-              ref={huddleRef}
-              className="bg-theme-gradient flex flex-col w-full max-w-[340px] rounded-xl"
-            >
-              <div className="flex flex-col px-1 items-center justify-center">
-                <div className="flex my-2 pr-2 w-full items-center justify-start">
-                  <div className="flex items-center mr-auto">
-                    <div className="ml-1 mr-1">
-                      <Signal />
-                    </div>
-                    <button className="w-full flex items-center text-[14.8px] hover:underline">
-                      <span className="break-all whitespace-break-spaces line-clamp-1">
-                        {customData?.channelName}
-                      </span>
-                    </button>
-                  </div>
-                  <IconButton
-                    icon={
-                      <OpenInWindow className="fill-icon-gray group-hover:fill-white" />
-                    }
-                    className="w-[30px] h-[30px]"
-                  />
-                </div>
-              </div>
-              <div className="mx-1 relative flex items-center justify-center min-h-[82px] overflow-hidden">
-                <div className="z-10 flex items-center justify-center">
-                  <Avatar
-                    width={40}
-                    borderRadius={4}
-                    fontSize={20}
-                    fontWeight={700}
-                    data={{ name: 'Lisk Feng', image: '' }}
-                  />
-                </div>
-                <div className="absolute w-full h-full overflow-hidden rounded-lg">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://a.slack-edge.com/f06881b/img/huddles/LiskFeng-Star_Gazing-preview.jpg"
-                    alt="huddle-background"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center justify-between h-[52px] px-2 gap-2">
-                <div className="flex items-center gap-1.5">
-                  <CallControlButton
-                    icon={<Microphone size={20} />}
-                    title={'Mute mic'}
-                    active
-                  />
-                  {width > 0 && width >= 220 && (
-                    <CallControlButton
-                      icon={<Video size={20} />}
-                      title={'Turn on Video'}
-                    />
-                  )}
-                  {width > 0 && width >= 260 && (
-                    <CallControlButton
-                      icon={<Desktop size={20} />}
-                      // onClick={toggleScreenShare}
-                      title={'Share screen'}
-                    />
-                  )}
-                  {width > 0 && width >= 300 && (
-                    <CallControlButton
-                      icon={<Emoji size={20} />}
-                      title={'Send a reaction'}
-                    />
-                  )}
-                  {width > 0 && width >= 340 && (
-                    <CallControlButton
-                      icon={<UserAdd size={20} />}
-                      title={'Invite people'}
-                    />
-                  )}
-                  <CallControlButton
-                    icon={<MoreVert size={20} />}
-                    title={'More options'}
-                  />
-                </div>
-                <button
-                  onClick={leaveCall}
-                  disabled={buttonsDisabled}
-                  className="flex items-center justify-center min-w-[64px] h-[36px] px-3 pb-[1px] text-[13px] border border-[#b41541] bg-[#b41541] hover:shadow-[0_1px_4px_#0000004d] hover:bg-blend-lighten hover:bg-[linear-gradient(#d8f5e914,#d8f5e914)] font-bold select-none text-white rounded-lg"
-                >
-                  Leave
-                </button>
-              </div>
-            </div>
-          </div>
-        </StreamTheme>
+        <HuddleUI
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          isSidebar
+        />
       );
     case callingState === CallingState.RINGING && !call.isCreatedByMe:
       return (

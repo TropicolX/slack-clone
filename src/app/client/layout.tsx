@@ -134,11 +134,6 @@ const Layout = ({ children }: LayoutProps) => {
     };
 
     if (user) setUpChatAndVideo();
-
-    // return () => {
-    //   chatClient?.disconnectUser();
-    //   videoClient?.disconnectUser();
-    // };
   }, [user, videoClient, chatClient]);
 
   if (!chatClient || !videoClient || !user)

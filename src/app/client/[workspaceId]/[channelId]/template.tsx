@@ -1,15 +1,17 @@
 'use client';
-import { useContext, useMemo } from 'react';
-import { StreamCall, useCalls } from '@stream-io/video-react-sdk';
+import { useContext, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { StreamCall, useCalls } from '@stream-io/video-react-sdk';
 
 import { AppContext } from '../../layout';
 import Huddle from '@/components/Huddle';
+import HuddleModal from '@/components/HuddleModal';
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const [currentCall] = useCalls();
 
   const { channelCall } = useContext(AppContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const huddleCall = useMemo(() => {
     switch (true) {
@@ -25,6 +27,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
   }, [currentCall, channelCall]);
 
   const sidebar = document.getElementById('sidebar');
+  const body = document.querySelector('body');
 
   return (
     <>
@@ -33,9 +36,20 @@ export default function Template({ children }: { children: React.ReactNode }) {
         huddleCall &&
         createPortal(
           <StreamCall call={huddleCall}>
-            <Huddle />
+            <Huddle isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
           </StreamCall>,
           sidebar
+        )}
+      {body &&
+        huddleCall &&
+        createPortal(
+          <StreamCall call={huddleCall}>
+            <HuddleModal
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          </StreamCall>,
+          body
         )}
     </>
   );

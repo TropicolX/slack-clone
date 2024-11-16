@@ -1,9 +1,10 @@
 'use client';
 import { useRouter, usePathname } from 'next/navigation';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import clsx from 'clsx';
 import { useUser } from '@clerk/nextjs';
+import clsx from 'clsx';
 
+import AddChannelModal from './AddChannelModal';
 import { AppContext } from '../app/client/layout';
 import ArrowDropdown from './icons/ArrowDropdown';
 import CaretDown from './icons/CaretDown';
@@ -15,9 +16,8 @@ import Send from './icons/Send';
 import SidebarButton from './SidebarButton';
 import Threads from './icons/Threads';
 import Plus from './icons/Plus';
-import AddChannelModal from './AddChannelModal';
 
-const [minWidth, defaultWidth] = [180, 275];
+const [minWidth, defaultWidth] = [215, 275];
 
 type SidebarProps = {
   layoutWidth: number;

@@ -115,20 +115,20 @@ const Channel = ({ params }: ChannelProps) => {
     if (!chatChannel && user) loadWorkspaceAndChannel();
   }, [
     channel,
-    setChannel,
-    loading,
+    channelId,
     chatChannel,
-    currentCall,
     chatClient,
+    currentCall,
+    loading,
+    setChannel,
+    setChannelCall,
+    setLoading,
+    setOtherWorkspaces,
+    setWorkspace,
+    user,
     videoClient,
     workspace,
     workspaceId,
-    channelId,
-    setLoading,
-    setWorkspace,
-    setOtherWorkspaces,
-    setChannelCall,
-    user,
   ]);
 
   useEffect(() => {
@@ -230,7 +230,7 @@ const Channel = ({ params }: ChannelProps) => {
               }}
               className="relative"
             >
-              <div className="absolute h-full inset-[0_-50px_0_0] overflow-y-scroll overflow-x-hidden z-50">
+              <div className="absolute h-full inset-[0_-50px_0_0] overflow-y-scroll overflow-x-hidden z-[2]">
                 {/* Messages */}
                 {channelLoading && (
                   <div className="div">I&apos;m loading...</div>
