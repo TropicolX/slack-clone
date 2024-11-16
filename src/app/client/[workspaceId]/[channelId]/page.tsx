@@ -1,5 +1,6 @@
 'use client';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Channel as ChannelType } from 'stream-chat';
 import { DefaultStreamChatGenerics } from 'stream-chat-react';
@@ -28,6 +29,7 @@ interface ChannelProps {
 
 const Channel = ({ params }: ChannelProps) => {
   const { workspaceId, channelId } = params;
+  const router = useRouter();
   const { user } = useUser();
   const [currentCall] = useCalls();
   const {
@@ -76,13 +78,14 @@ const Channel = ({ params }: ChannelProps) => {
             'activitySession',
             JSON.stringify({ workspaceId, channelId })
           );
+          setLoading(false);
         } else {
           console.error('Error fetching workspace data:', result.error);
+          router.push('/');
         }
       } catch (error) {
         console.error('Error fetching workspace data:', error);
-      } finally {
-        setLoading(false);
+        router.push('/');
       }
     };
 
@@ -120,6 +123,7 @@ const Channel = ({ params }: ChannelProps) => {
     chatClient,
     currentCall,
     loading,
+    router,
     setChannel,
     setChannelCall,
     setLoading,
