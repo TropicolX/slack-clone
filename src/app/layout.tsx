@@ -1,8 +1,5 @@
 import type { Metadata } from 'next';
-import { ClerkProvider } from '@clerk/nextjs';
 
-import '@stream-io/video-react-sdk/dist/css/styles.css';
-import 'stream-chat-react/dist/css/v2/index.css';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,10 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="text-white bg-purple antialiased">{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className="text-white bg-purple antialiased">{children}</body>
+    </html>
   );
 }
