@@ -51,6 +51,8 @@ import Quote from './icons/Quote';
 import Strikethrough from './icons/Strikethrough';
 import SlashBox from './icons/SlashBox';
 import Video from './icons/Video';
+import Send from './icons/Send';
+import CaretDown from './icons/CaretDown';
 
 type Descendant = Omit<SlateDescendant, 'children'> & {
   children: (
@@ -458,13 +460,34 @@ const InputContainer = () => {
                 icon={<SlashBox color="var(--icon-gray)" />}
               />
             </div>
-            <button
-              className="disabled:bg-white"
-              onClick={handleSubmit}
-              disabled={!!cooldownRemaining}
-            >
-              Send
-            </button>
+            <div className="flex items-center mr-0.5 ml-2 rounded h-7 border border-[#797c814d] text-[#e8e8e8b3] bg-[#007a5a] border-[#007a5a]">
+              <button
+                onClick={handleSubmit}
+                disabled={!!cooldownRemaining}
+                className="px-2 h-[28px] rounded-l hover:bg-[#148567]"
+              >
+                <Send
+                  color={
+                    !Boolean(cooldownRemaining)
+                      ? 'var(--primary)'
+                      : 'var(--icon-gray)'
+                  }
+                  size={16}
+                  filled
+                />
+              </button>
+              <div className="cursor-pointer h-5 w-[1px] bg-[#ffffff80]" />
+              <button className="w-[22px] flex items-center justify-center h-[26px] rounded-r hover:bg-[#148567]">
+                <CaretDown
+                  size={16}
+                  color={
+                    !Boolean(cooldownRemaining)
+                      ? 'var(--primary)'
+                      : 'var(--icon-gray)'
+                  }
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>

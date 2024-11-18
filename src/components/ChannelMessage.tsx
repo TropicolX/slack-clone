@@ -182,7 +182,7 @@ const ChannelMessage = () => {
                       <img
                         src={attachment.image_url}
                         alt="attachment"
-                        className="w-full aspect-auto rounded-lg"
+                        className="w-full max-h-[358px] aspect-auto rounded-lg"
                       />
                     )}
                     {/* Message Actions */}

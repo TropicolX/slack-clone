@@ -8,8 +8,9 @@ import {
   Window,
 } from 'stream-chat-react';
 
-import DateSeperator from './DateSeparator';
+import ChannelLoading from './ChannelLoading';
 import ChannelMessage from './ChannelMessage';
+import DateSeperator from './DateSeparator';
 import InputContainer from './InputContainer';
 
 interface ChannelChatProps {
@@ -21,7 +22,11 @@ const ChannelChat = ({ channel }: ChannelChatProps) => {
 
   return (
     <div className="w-full h-full">
-      <Channel channel={channel} DateSeparator={DateSeperator}>
+      <Channel
+        LoadingIndicator={ChannelLoading}
+        channel={channel}
+        DateSeparator={DateSeperator}
+      >
         <Window>
           <MessageList Message={ChannelMessage} />
           {inputContainer &&

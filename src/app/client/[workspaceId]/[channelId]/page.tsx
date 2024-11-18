@@ -10,10 +10,11 @@ import clsx from 'clsx';
 import { AppContext } from '../../layout';
 import CaretDown from '@/components/icons/CaretDown';
 import ChannelChat from '@/components/ChannelChat';
+import ChannelLoading from '../../../../components/ChannelLoading';
 import Files from '@/components/icons/Files';
 import Hash from '@/components/icons/Hash';
 import Headphones from '@/components/icons/Headphones';
-import HuddleButton from '@/components/HuddleToggleButton';
+import HuddleToggleButton from '@/components/HuddleToggleButton';
 import Message from '@/components/icons/Message';
 import MoreVert from '@/components/icons/MoreVert';
 import Pin from '@/components/icons/Pin';
@@ -188,7 +189,7 @@ const Channel = ({ params }: ChannelProps) => {
           </button>
           {channelCall && (
             <StreamCall call={channelCall}>
-              <HuddleButton currentCall={currentCall} />
+              <HuddleToggleButton currentCall={currentCall} />
             </StreamCall>
           )}
           {!channelCall && (
@@ -242,9 +243,7 @@ const Channel = ({ params }: ChannelProps) => {
             >
               <div className="absolute h-full inset-[0_-50px_0_0] overflow-y-scroll overflow-x-hidden z-[2]">
                 {/* Messages */}
-                {channelLoading && (
-                  <div className="div">I&apos;m loading...</div>
-                )}
+                {channelLoading && <ChannelLoading />}
                 {!channelLoading && <ChannelChat channel={chatChannel!} />}
               </div>
             </div>
