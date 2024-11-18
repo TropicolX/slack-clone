@@ -158,7 +158,7 @@ const GetStarted = () => {
                   label="Channel name"
                   name="channelName"
                   value={channelName}
-                  onChange={(e) => setChannelName(e.target.value)}
+                  onChange={(e) => setChannelName(e.target.value.toLowerCase())}
                   placeholder="Enter a name for your first channel"
                   maxLength={80}
                   required

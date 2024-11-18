@@ -62,14 +62,6 @@ const HuddleToggleButton = ({ currentCall }: HuddleToggleButton) => {
         createdByUserImage: user?.imageUrl,
       };
 
-      await call?.getOrCreate({
-        ring: true,
-        data: {
-          custom: customData,
-          members: currentMembers,
-        },
-      });
-
       if (call?.permissionsContext.hasPermission(OwnCapability.UPDATE_CALL)) {
         if (!isEqual(call?.state.custom, customData)) {
           await call?.update({
@@ -83,6 +75,14 @@ const HuddleToggleButton = ({ currentCall }: HuddleToggleButton) => {
           });
         }
       }
+
+      await call?.getOrCreate({
+        ring: true,
+        data: {
+          custom: customData,
+          members: currentMembers,
+        },
+      });
 
       await call?.join();
       setChannelCall(call!);

@@ -90,9 +90,14 @@ const Channel = ({ params }: ChannelProps) => {
     };
 
     const loadChannel = async () => {
-      const channel = chatClient.channel('messaging', channelId, {
-        members: workspace.memberships.map((m) => m.userId),
+      const currentMembers = workspace.memberships.map((m) => m.userId);
+      const chatChannel = chatClient.channel('messaging', channelId, {
+        members: currentMembers,
+        name: channel.name,
+        description: channel.description,
+        workspaceId: channel.workspaceId,
       });
+
       if (currentCall?.id === channelId) {
         setChannelCall(currentCall);
       } else {
@@ -100,7 +105,7 @@ const Channel = ({ params }: ChannelProps) => {
         setChannelCall(channelCall);
       }
 
-      setChatChannel(channel);
+      setChatChannel(chatChannel);
       setChannelLoading(false);
     };
 
@@ -111,11 +116,12 @@ const Channel = ({ params }: ChannelProps) => {
         if (!channel)
           setChannel(workspace.channels.find((c) => c.id === channelId)!);
         if (loading) setLoading(false);
-        if (chatClient) loadChannel();
+        if (chatClient && channel) loadChannel();
       }
     };
 
-    if (!chatChannel && user) loadWorkspaceAndChannel();
+    if ((!chatChannel || chatChannel?.id !== channelId) && user)
+      loadWorkspaceAndChannel();
   }, [
     channel,
     channelId,

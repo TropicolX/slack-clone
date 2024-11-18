@@ -88,7 +88,119 @@
     padding: 2px 3px 1px;
     font-size: 12px;
     line-height: 1.50001;
-    /* font-family: monospace; */
+  }
+
+  .channel pre:first-child {
+    margin-top: 4px;
+  }
+
+  .channel .code-block {
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  .channel pre:first-child code,
+  .channel .code-block:first-child code,
+  .channel pre:last-child code,
+  .channel .code-block:last-child code,
+  .channel pre:not(:first-child):not(:last-child) code,
+  .channel .code-block:not(:first-child):not(:last-child) code {
+    border: none;
+    background: none;
+    border-radius: 0px;
+    color: #d1d2d3;
+    padding: 0px;
+  }
+
+  .channel pre:first-child,
+  .channel .code-block:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top: 1px solid #e8e8e821;
+    border-left: 1px solid #e8e8e821;
+    border-right: 1px solid #e8e8e821;
+    border-bottom: 0px;
+    background-color: #232529;
+    padding: 8px 8px 0px 8px;
+    color: #d1d2d3;
+  }
+
+  .channel pre:last-child,
+  .code-block:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-top: 0px;
+    border-left: 1px solid #e8e8e821;
+    border-right: 1px solid #e8e8e821;
+    border-bottom: 1px solid #e8e8e821;
+    background-color: #232529;
+    padding: 0px 8px 8px 8px;
+    color: #d1d2d3;
+  }
+
+  .channel pre:not(:first-child):not(:last-child),
+  .code-block:not(:first-child):not(:last-child) {
+    border-radius: 0;
+    background-color: #232529;
+    border-left: 1px solid #e8e8e821;
+    border-right: 1px solid #e8e8e821;
+    padding: 0px 8px;
+    color: #d1d2d3;
+  }
+
+  .channel pre:only-child,
+  .channel .code-block:only-child {
+    padding-bottom: 8px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top: 1px solid #e8e8e821;
+    border-bottom: 1px solid #e8e8e821;
+  }
+
+  .emoji {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, sans-serif;
+  }
+
+  blockquote {
+    position: relative;
+    padding-left: 16px;
+    margin: 4px 0px;
+  }
+
+  blockquote:before {
+    background: rgba(221, 221, 221, 1);
+    content: '';
+    border-radius: 8px;
+    width: 4px;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  blockquote:not(:first-child):before {
+    background: rgba(221, 221, 221, 1);
+    content: '';
+    border-radius: 8px;
+    width: 4px;
+    display: block;
+    position: absolute;
+    height: calc(100% + 6px);
+    top: -6px;
+    bottom: 0;
+    left: 0;
+  }
+
+  .channel a {
+    color: #1d9bd1;
   }
 
   .channel .str-chat {
@@ -130,6 +242,30 @@
 
   .channel .str-chat__list-notifications {
     display: none;
+  }
+
+  .channel
+    .str-chat__unread-messages-separator-wrapper
+    .str-chat__unread-messages-separator {
+    background: #ffffff21;
+    color: #ffffff;
+    user-select: none;
+  }
+
+  .channel .str-chat__unread-messages-notification {
+    display: none;
+  }
+
+  #sidebar
+    .str-chat.messaging.light.str-chat__channel-list.str-chat__channel-list-react {
+    background: none;
+    border: none;
+  }
+
+  #sidebar
+    .str-chat.messaging.light.str-chat__channel-list.str-chat__channel-list-react
+    > div {
+    padding: 0;
   }
 
   .huddle .str-video__participant-view,

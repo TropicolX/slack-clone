@@ -5,18 +5,10 @@ import { SignOutButton } from '@clerk/nextjs';
 
 import Button from '@/components/Button';
 import Navbar from '@/components/Navbar';
-import WorkspaceList from '@/components/WorkspaceList';
 import prisma from '@/lib/prisma';
+import WorkspaceList from '@/components/WorkspaceList';
 
 export default async function Home() {
-  // THINGS LEFT TO DO
-  // Add workspace creation page (ui + functionality) ✅
-  // Add channel creation ✅
-  // Add workspace switcher popup ✅
-  // Add user settings popup? ✅
-  // Add huddle creation ui + functionality (Stream Video) ⏳
-  // Add chat ui + functionality (Stream Chat) ⏳
-
   const user = await currentUser();
   const userEmail = user?.primaryEmailAddress?.emailAddress;
 

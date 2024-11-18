@@ -1,15 +1,15 @@
 'use client';
-import { useRouter, usePathname } from 'next/navigation';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { ChannelList } from 'stream-chat-react';
 import clsx from 'clsx';
 
 import AddChannelModal from './AddChannelModal';
 import { AppContext } from '../app/client/layout';
 import ArrowDropdown from './icons/ArrowDropdown';
 import CaretDown from './icons/CaretDown';
+import ChannelPreview from './ChannelPreview';
 import Compose from './icons/Compose';
-import Hash from './icons/Hash';
 import IconButton from './IconButton';
 import Refine from './icons/Refine';
 import Send from './icons/Send';
@@ -24,10 +24,8 @@ type SidebarProps = {
 };
 
 const Sidebar = ({ layoutWidth }: SidebarProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const { user } = useUser();
-  const { loading, setChannel, workspace } = useContext(AppContext);
+  const { loading, workspace } = useContext(AppContext);
 
   const [width, setWidth] = useState<number>(() => {
     const savedWidth =
@@ -97,16 +95,6 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
     }
   }, [width, layoutWidth, maxWidth]);
 
-  const goToChannel = (channelId: string) => {
-    setChannel(workspace.channels.find((c) => c.id === channelId)!);
-    router.push(`/client/${workspace.id}/${channelId}`);
-  };
-
-  const channelActive = (channelId: string) => {
-    const pathChannelId = pathname.split('/').filter(Boolean).pop();
-    return pathChannelId === channelId;
-  };
-
   const openCreateChannelModal = () => {
     setIsModalOpen(true);
   };
@@ -165,15 +153,15 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
                 Channels
               </button>
             </div>
-            {workspace.channels.map((channel) => (
-              <SidebarButton
-                key={channel.id}
-                icon={Hash}
-                title={channel.name}
-                onClick={() => goToChannel(channel.id)}
-                active={channelActive(channel.id)}
-              />
-            ))}
+            <ChannelList
+              filters={{ workspaceId: workspace.id }}
+              Preview={ChannelPreview}
+              sort={{
+                created_at: 1,
+              }}
+              LoadingIndicator={() => null}
+              lockChannelOrder
+            />
             {workspace.ownerId === user!.id && (
               <SidebarButton
                 icon={Plus}

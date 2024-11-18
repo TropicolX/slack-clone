@@ -38,7 +38,7 @@ const Avatar = ({
         fontWeight,
         backgroundColor: 'rgba(239,225,245,0.25)',
       }}
-      className="aspect-square uppercase text-white font-sans-serif font-medium flex items-center justify-center"
+      className="shrink-0 aspect-square uppercase text-white font-sans-serif font-medium flex items-center justify-center"
     >
       <div className="select-none">{name ? name[0] : ''}</div>
     </div>

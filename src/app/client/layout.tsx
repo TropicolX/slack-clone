@@ -32,9 +32,6 @@ import SearchBar from '@/components/SearchBar';
 import WorkspaceLayout from '@/components/WorkspaceLayout';
 import WorkspaceSwitcher from '@/components/WorkspaceSwitcher';
 
-import 'stream-chat-react/dist/css/v2/index.css';
-import '@stream-io/video-react-sdk/dist/css/styles.css';
-
 interface LayoutProps {
   children?: ReactNode;
   params: Promise<{ workspaceId: string }>;

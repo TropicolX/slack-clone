@@ -10,8 +10,13 @@ import useClickOutside from '@/hooks/useClickOutside';
 const WorkspaceSwitcher = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { workspace, setWorkspace, otherWorkspaces, setOtherWorkspaces } =
-    useContext(AppContext);
+  const {
+    workspace,
+    setWorkspace,
+    otherWorkspaces,
+    setOtherWorkspaces,
+    setChannel,
+  } = useContext(AppContext);
 
   const domNode = useClickOutside(() => {
     setOpen(false);
@@ -23,6 +28,7 @@ const WorkspaceSwitcher = () => {
       workspace,
     ]);
     setWorkspace(otherWorkspace);
+    setChannel(otherWorkspace.channels[0]);
     router.push(
       `/client/${otherWorkspace.id}/${otherWorkspace.channels[0].id}`
     );

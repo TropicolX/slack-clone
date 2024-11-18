@@ -6,13 +6,17 @@ export default function Client() {
   const router = useRouter();
 
   useEffect(() => {
-    const activitySession = localStorage.getItem('activitySession');
-    if (activitySession) {
-      const { workspaceId, channelId } = JSON.parse(activitySession);
-      router.push(`/client/${workspaceId}/${channelId}`);
-    } else {
-      router.push('/');
-    }
+    const fetchActivitySession = async () => {
+      const activitySession = localStorage.getItem('activitySession');
+      if (activitySession) {
+        const { workspaceId, channelId } = await JSON.parse(activitySession);
+        router.push(`/client/${workspaceId}/${channelId}`);
+      } else {
+        router.push('/');
+      }
+    };
+
+    fetchActivitySession();
   }, [router]);
 
   return null;

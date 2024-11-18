@@ -90,7 +90,7 @@ const AddChannelModal = ({ open, onClose }: AddChannelModalProps) => {
           label="Channel name"
           placeholder="e.g. plan-budget"
           value={channelName}
-          onChange={(e) => setChannelName(e.target.value)}
+          onChange={(e) => setChannelName(e.target.value.toLowerCase())}
           pattern={channelNameRegex}
           title="That name is already taken by another channel in this workspace"
           maxLength={80}

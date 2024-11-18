@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { CallingState, StreamTheme } from '@stream-io/video-react-sdk';
 
+import { AppContext } from '../app/client/layout';
 import Avatar from './Avatar';
 import Hash from './icons/Hash';
 import HuddleUI from './HuddleUI';
@@ -12,6 +14,7 @@ interface HuddleProps {
 
 const Huddle = ({ isModalOpen, setIsModalOpen }: HuddleProps) => {
   const { call, customData, callingState, buttonsDisabled } = useHuddle();
+  const { channel } = useContext(AppContext);
 
   const joinCall = () => {
     call?.join();
@@ -26,7 +29,9 @@ const Huddle = ({ isModalOpen, setIsModalOpen }: HuddleProps) => {
   if (!call) return null;
 
   switch (true) {
-    case callingState === CallingState.RINGING && call.isCreatedByMe:
+    case callingState === CallingState.RINGING &&
+      call.isCreatedByMe &&
+      call.id === channel.id:
     default:
       return null;
     case callingState === CallingState.JOINED ||
