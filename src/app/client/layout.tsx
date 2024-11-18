@@ -168,7 +168,7 @@ const Layout = ({ children }: LayoutProps) => {
               <div className="w-[4.375rem] h-10 mr-auto flex-none" />
               {!loading && (
                 <div className="flex flex-auto items-center">
-                  <div className="relative flex flex-none basis-[24%]">
+                  <div className="relative hidden sm:flex flex-none basis-[24%]">
                     <div className="flex justify-start basis-full" />
                     <div className="flex justify-end basis-full mr-3">
                       <div className="flex gap-1 items-center">
@@ -187,7 +187,7 @@ const Layout = ({ children }: LayoutProps) => {
                     </div>
                   </div>
                   <SearchBar placeholder={`Search ${workspace?.name}`} />
-                  <div className="flex flex-[1_0_auto] items-center justify-end mr-1">
+                  <div className="hidden sm:flex flex-[1_0_auto] items-center justify-end mr-1">
                     <IconButton icon={<Help color="var(--primary)" />} />
                   </div>
                 </div>

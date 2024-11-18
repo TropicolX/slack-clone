@@ -35,7 +35,7 @@ const Navbar = ({ action }: NavbarProps) => {
               <span className="text-[29px] font-outfit font-bold">slack</span>
             </div>
           </div>
-          <div className="flex items-center text-sm flex-1">
+          <div className="hidden sm:flex items-center text-sm flex-1">
             <ul className="flex flex-1 leading-[1.555] -tracking-[.0012em]">
               <NavLink dropdown>Features</NavLink>
               <NavLink dropdown>Solutions</NavLink>

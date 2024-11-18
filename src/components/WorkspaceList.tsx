@@ -39,24 +39,32 @@ const WorkspaceList = ({
             />
             <input type="hidden" name="token" value={workspace?.token} />
             <input type="hidden" name="workspaceId" value={workspace.id} />
-            <div className="flex items-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={workspace.image || placeholderImage}
-                alt="workspace-image"
-                className="rounded-[5px] mr-4 h-[75px] w-[75px] object-cover"
-              />
-              <div className="flex flex-col my-auto text-black">
-                <span className="text-lg font-bold mb-2">{workspace.name}</span>
-                <div className="flex h-5">
-                  <span className="text-[#696969] text-[14.5px]">
-                    {workspace.memberCount} member
-                    {workspace.memberCount !== 1 && 's'}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-0">
+              <div className="flex items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={workspace.image || placeholderImage}
+                  alt="workspace-image"
+                  className="rounded-[5px] mr-4 h-[75px] w-[75px] object-cover"
+                />
+                <div className="flex flex-col my-auto text-black">
+                  <span className="text-lg font-bold mb-2">
+                    {workspace.name}
                   </span>
+                  <div className="flex h-5">
+                    <span className="text-[#696969] text-[14.5px]">
+                      {workspace.memberCount} member
+                      {workspace.memberCount !== 1 && 's'}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="ml-auto">
-                <Button type="submit" variant={buttonVariant}>
+              <div className="sm:ml-auto w-full sm:w-auto flex sm:block">
+                <Button
+                  type="submit"
+                  variant={buttonVariant}
+                  className="grow shrink-0"
+                >
                   <span>{actionText}</span>
                 </Button>
               </div>

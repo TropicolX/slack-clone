@@ -110,7 +110,7 @@ const HuddleToggleButton = ({ currentCall }: HuddleToggleButton) => {
   return (
     <div
       className={clsx(
-        'w-[59px] flex items-center ml-2 rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]',
+        'w-[59px] hidden sm:flex items-center ml-2 rounded-lg h-7 border border-[#797c814d] text-[#e8e8e8b3]',
         callActive && 'bg-[#259b69] border-[#259b69]',
         callAvailable && 'bg-[#063225] border-[#00553d]'
       )}

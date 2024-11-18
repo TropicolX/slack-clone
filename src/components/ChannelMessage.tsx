@@ -125,7 +125,7 @@ const ChannelMessage = () => {
         </div>
         <div className="mb-1">
           <div className="w-full">
-            <div className="flex flex-col">
+            <div className="flex flex-col max-w-[245px] sm:max-w-full">
               <MessageText
                 renderText={(text, mentionedUsers) =>
                   renderText(text, mentionedUsers, {

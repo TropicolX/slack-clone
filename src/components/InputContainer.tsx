@@ -318,16 +318,18 @@ const InputContainer = () => {
                 format="block-quote"
                 icon={<Quote color="var(--icon-gray)" />}
               />
-              <div className="separator h-5 w-[1px] mx-1 my-0.5 self-center flex-shrink-0 bg-[#e8e8e821]" />
+              <div className="hidden sm:block separator h-5 w-[1px] mx-1 my-0.5 self-center flex-shrink-0 bg-[#e8e8e821]" />
               <Button
                 type="mark"
                 format="code"
                 icon={<Code color="var(--icon-gray)" />}
+                className="hidden sm:inline-flex"
               />
               <Button
                 type="block"
                 format="code-block"
                 icon={<CodeBlock color="var(--icon-gray)" />}
+                className="hidden sm:inline-flex"
               />
             </div>
           </div>
@@ -442,21 +444,21 @@ const InputContainer = () => {
                 className="rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
                 icon={<Mentions color="var(--icon-gray)" />}
               />
-              <div className="separator h-5 w-[1px] mx-1.5 my-0.5 self-center flex-shrink-0 bg-[#e8e8e821]" />
+              <div className="hidden sm:block separator h-5 w-[1px] mx-1.5 my-0.5 self-center flex-shrink-0 bg-[#e8e8e821]" />
               <Button
                 format="none"
-                className="rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
+                className="hidden sm:inline-flex rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
                 icon={<Video color="var(--icon-gray)" />}
               />
               <Button
                 format="none"
-                className="rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
+                className="hidden sm:inline-flex rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
                 icon={<Microphone color="var(--icon-gray)" />}
               />
-              <div className="separator h-5 w-[1px] mx-1.5 my-0.5 self-center flex-shrink-0 bg-[#e8e8e821]" />
+              <div className="hidden sm:block separator h-5 w-[1px] mx-1.5 my-0.5 self-center flex-shrink-0 bg-[#e8e8e821]" />
               <Button
                 format="none"
-                className="rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
+                className="hidden sm:inline-flex rounded hover:bg-[#d1d2d30b] [&_path]:hover:fill-channel-gray"
                 icon={<SlashBox color="var(--icon-gray)" />}
               />
             </div>

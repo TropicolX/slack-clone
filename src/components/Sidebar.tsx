@@ -108,7 +108,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
       id="sidebar"
       style={{ width: `${width}px` }}
       className={clsx(
-        'relative px-2 flex flex-col flex-shrink-0 gap-3 min-w-0 min-h-0 max-h-[calc(100vh-44px)] bg-[#10121499] border-r-[1px] border-solid',
+        'hidden relative px-2 sm:flex flex-col flex-shrink-0 gap-3 min-w-0 min-h-0 max-h-[calc(100vh-44px)] bg-[#10121499] border-r-[1px] border-solid',
         loading ? 'border-r-transparent' : 'border-r-[#797c814d]'
       )}
     >

@@ -144,7 +144,7 @@ export default async function Home() {
             alt="waving-hand"
             unoptimized
           />
-          <h1 className="text-[55.5px] leading-[1.12] font-outfit font-semibold">
+          <h1 className="text-[40px] sm:text-[55.5px] leading-[1.12] font-outfit font-semibold">
             Welcome back
           </h1>
         </div>
@@ -164,7 +164,7 @@ export default async function Home() {
         </div>
         {/* Create new workspace */}
         <div className="rounded-[9px] mb-12 border-[#fff3] border-4">
-          <div className="grid items-center bg-[#fff] p-4 grid-rows-[1fr] grid-cols-[200px_1fr_auto] rounded-[5px]">
+          <div className="flex flex-col sm:grid items-center bg-[#fff] p-4 grid-rows-[1fr] grid-cols-[200px_1fr_auto] rounded-[5px]">
             <Image
               src="https://a.slack-edge.com/613463e/marketing/img/homepage/bold-existing-users/create-new-workspace-module/woman-with-laptop-color-background.png"
               width={200}
@@ -172,7 +172,7 @@ export default async function Home() {
               className="rounded-[5px] m-[-1rem_-1rem_-47px]"
               alt="woman-with-laptop"
             />
-            <p className="pr-4 tracking-[.02em] text-[17.8px] text-black">
+            <p className="mt-[50px] text-center sm:text-start mb-3 sm:my-0 pr-4 tracking-[.02em] text-[17.8px] text-black">
               <strong>
                 {workspaces.length > 0
                   ? 'Want to use Slack with a different team?'
@@ -199,7 +199,7 @@ export default async function Home() {
           )}
         </div>
         <SignOutButton redirectUrl="/sign-in">
-          <div className="flex items-center justify-center mb-12">
+          <div className="flex flex-col sm:flex-row items-center justify-center mb-12">
             <p className="mr-2 text-lg leading-[1.555] tracking-[-.0012em]">
               Not seeing your workspace?
             </p>
