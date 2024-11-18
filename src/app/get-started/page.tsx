@@ -70,7 +70,7 @@ const GetStarted = () => {
     <div className="client font-lato w-screen h-screen flex flex-col">
       <div className="absolute w-full h-full bg-theme-gradient" />
       <div className="relative w-full h-10 flex items-center justify-between pr-1"></div>
-      <div className="w-screen h-[calc(100vh-40px)] grid grid-cols-[70px_auto]">
+      <div className="w-screen h-[calc(100svh-40px)] grid grid-cols-[70px_auto]">
         <div className="hidden relative w-[4.375rem] sm:flex flex-col items-center overflow-hidden gap-3 pt-2 z-[1000] bg-transparent">
           <div className="w-9 h-9 mb-[5px]">
             <Avatar
@@ -100,7 +100,7 @@ const GetStarted = () => {
           </div>
         </div>
         <div className="relative w-svw h-full sm:h-auto sm:w-auto flex mr-1 mb-1 rounded-md overflow-hidden border border-solid border-[#797c814d]">
-          <div className="hidden w-[275px] relative px-2 sm:flex flex-col flex-shrink-0 gap-3 min-w-0 min-h-0 max-h-[calc(100vh-44px)] bg-[#10121499] border-r-[1px] border-solid border-r-[#797c814d]">
+          <div className="hidden w-[275px] relative px-2 sm:flex flex-col flex-shrink-0 gap-3 min-w-0 min-h-0 max-h-[calc(100svh-44px)] bg-[#10121499] border-r-[1px] border-solid border-r-[#797c814d]">
             <div className="pl-1 w-full h-[49px] flex items-center justify-between">
               <div className="max-w-[calc(100%-80px)]">
                 <div className="w-fit max-w-full rounded-md py-[3px] px-2 flex items-center text-white hover:bg-hover-gray">

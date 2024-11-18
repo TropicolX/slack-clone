@@ -194,7 +194,7 @@ const Layout = ({ children }: LayoutProps) => {
               )}
             </div>
             {/* Main */}
-            <div className="w-screen h-[calc(100vh-40px)] grid grid-cols-[70px_auto]">
+            <div className="w-screen h-[calc(100svh-40px)] grid grid-cols-[70px_auto]">
               {/* Rail */}
               <div className="relative w-[4.375rem] flex flex-col items-center gap-3 pt-2 z-[1000] bg-transparent">
                 {!loading && (

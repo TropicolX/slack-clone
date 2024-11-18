@@ -340,7 +340,7 @@ const InputContainer = () => {
                 style={{
                   scrollbarWidth: 'none',
                 }}
-                className="flex-1 min-h-[22px] scroll- overflow-y-scroll max-h-[calc(60vh-80px)]"
+                className="flex-1 min-h-[22px] scroll- overflow-y-scroll max-h-[calc(60svh-80px)]"
               >
                 <Editable
                   renderElement={renderElement as never}
