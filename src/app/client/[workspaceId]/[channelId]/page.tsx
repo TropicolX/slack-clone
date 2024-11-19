@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { AppContext } from '../../layout';
 import CaretDown from '@/components/icons/CaretDown';
 import ChannelChat from '@/components/ChannelChat';
-import ChannelLoading from '../../../../components/ChannelLoading';
+import ChannelLoading from '@/components/ChannelLoading';
 import Files from '@/components/icons/Files';
 import Hash from '@/components/icons/Hash';
 import Headphones from '@/components/icons/Headphones';

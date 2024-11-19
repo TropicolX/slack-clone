@@ -103,6 +103,8 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
     setIsModalOpen(false);
   };
 
+  const isWorkspaceOwner = workspace?.ownerId === user?.id;
+
   return (
     <div
       id="sidebar"
@@ -162,7 +164,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
               LoadingIndicator={() => null}
               lockChannelOrder
             />
-            {workspace.ownerId === user!.id && (
+            {isWorkspaceOwner && (
               <SidebarButton
                 icon={Plus}
                 title="Add a channel"
