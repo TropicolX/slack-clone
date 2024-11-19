@@ -9,7 +9,6 @@ import HuddleModal from '@/components/HuddleModal';
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const [currentCall] = useCalls();
-
   const { channelCall } = useContext(AppContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 

@@ -43,7 +43,7 @@ const Navbar = ({ action }: NavbarProps) => {
               <NavLink dropdown>Resources</NavLink>
               <NavLink>Pricing</NavLink>
             </ul>
-            <button className="mt-1 mr-6">
+            <button className="hidden lg:flex mt-1 mr-6">
               <svg
                 width="20"
                 height="20"
@@ -61,7 +61,7 @@ const Navbar = ({ action }: NavbarProps) => {
               <Button
                 type="submit"
                 variant="secondary"
-                className="ml-2 py-0 w-[240px] h-[45px]"
+                className="hidden lg:flex ml-2 py-0 w-[240px] h-[45px]"
               >
                 <span>Create a new workspace</span>
               </Button>
