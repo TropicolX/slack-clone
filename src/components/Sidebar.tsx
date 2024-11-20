@@ -49,7 +49,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
       }
       document.body.style.userSelect = 'none';
       document.body.style.cursor = 'col-resize';
-      document.querySelectorAll('button').forEach((el) => {
+      document.querySelectorAll('.sidebar-btn').forEach((el) => {
         el.setAttribute('style', 'cursor: col-resize');
       });
       setWidth((previousWidth) => {
@@ -66,7 +66,7 @@ const Sidebar = ({ layoutWidth }: SidebarProps) => {
     const onMouseUp = () => {
       document.body.style.userSelect = 'auto';
       document.body.style.cursor = 'auto';
-      document.querySelectorAll('button').forEach((el) => {
+      document.querySelectorAll('.sidebar-btn').forEach((el) => {
         el.removeAttribute('style');
       });
       isDragged.current = false;
