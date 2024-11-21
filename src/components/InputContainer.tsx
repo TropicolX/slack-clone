@@ -262,7 +262,7 @@ const InputContainer = () => {
 
   const handleSubmit = async () => {
     const text = serializeToMarkdown(editor.children as Descendant[]);
-    if (text) {
+    if (text || attachments.length > 0) {
       sendMessage({
         text,
         attachments,
@@ -351,6 +351,14 @@ const InputContainer = () => {
                   spellCheck
                   autoFocus
                   onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      if (event.shiftKey) {
+                        return;
+                      } else {
+                        event.preventDefault();
+                        handleSubmit();
+                      }
+                    }
                     if (isHotkey('mod+a', event)) {
                       event.preventDefault();
                       Transforms.select(editor, []);
