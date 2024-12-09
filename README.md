@@ -3,11 +3,11 @@
 A collaborative chat and video-calling application inspired by Slack, built using Next.js, TypeScript, and Stream's Video and Chat SDKs. This Slack clone offers real-time messaging, video calls, rich text formatting, and more, providing a complete team communication solution.
 
 <p align="center">
-    <a href="https://tropicolx.hashnode.dev/building-a-slack-clone-with-nextjs-tailwindcss-and-stream" style="display: block;" align="center">
+    <a href="https://tropicolx.hashnode.dev/building-a-slack-clone-with-nextjs-and-tailwindcss-part-one" style="display: block;" align="center">
         <img src="https://res.cloudinary.com/tropicolx/image/upload/v1732563279/Slack%20clone/pzsikrnn7odrwyylzflh.png" alt="Building a Slack Clone with Next.js, TailwindCSS, and Stream" width="60%" />
     </a>
 </p>
-<p align="center"><a href="https://tropicolx.hashnode.dev/building-a-slack-clone-with-nextjs-tailwindcss-and-stream" align="center">Click to read!</a></p>
+<p align="center"><a href="https://tropicolx.hashnode.dev/building-a-slack-clone-with-nextjs-and-tailwindcss-part-one" align="center">Click to read!</a></p>
 
 ## Table of Contents
 
@@ -56,7 +56,7 @@ You can access a live demo of the application [here](https://slack-clone-nine-je
    # or
    yarn install
    ```
-3. **Set Up Database**
+3. **[Set Up Database](https://tropicolx.hashnode.dev/building-a-slack-clone-with-nextjs-and-tailwindcss-part-one#heading-running-prisma-migrations)**
 4. **Set Up Stream Dashboard**
    
    - Create a new Stream app with chat messaging and video calling enabled.
